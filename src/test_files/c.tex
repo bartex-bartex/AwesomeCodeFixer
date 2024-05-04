@@ -1,0 +1,1956 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[T1]{fontenc} % Font encoding
+\usepackage[absolute, overlay]{textpos}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\begin{document}
+	\title{\fontsize{40}{48}\selectfont \textbf{\textcolor{blue!80!black}{Dokumentacja}}}
+	\author{}
+	\date{}
+
+	\maketitle
+
+	\begin{center}
+		\textbf{\LARGE \textcolor{blue!80!black}{IoT Smart House}}
+	\end{center}
+
+	\vspace{2cm}
+
+	\begin{center}
+		\large \textbf{Autorzy:}
+
+		\vspace{0.3cm}
+
+		\begin{tabular}{c}
+			Rafał Żelazko       \\
+			Bartosz Sendor      \\
+			Patryk Skowron      \\
+			Bartosz Warchoł     \\
+			Artur Wojciechowski \\
+		\end{tabular}
+	\end{center}
+
+	\vspace{7cm}
+
+	\begin{flushright}
+		\large 04.2024
+	\end{flushright}
+	\newpage
+
+	\maketitle
+
+	\clearpage
+	\tableofcontents
+	\clearpage
+
+	\section{Wprowadzenie}
+
+	Witamy w świetle przyszłości domowej automatyzacji - \textbf{IoT Smart House}.
+	Nasz wielomodułowy system będzie oferować kompleksowe rozwiązania zarządzania
+	inteligentnym domem poprzez integrację wszystkich naszych urządzeń IoT różnych
+	producentów w jednym miejscu przez wielu użytkowników jednocześnie.
+
+	Zaawansowane \textbf{funkcje harmonogramowania} pracy urządzeń pozwolą na automatyczne
+	uruchamianie ich w określonych godzinach i kolejności, a możliwość pisania
+	własnych \textbf{skryptów} oraz instalowania \textbf{rozszerzeń} pozwoli
+	użytkownikom na dostosowanie systemu dla ich indywidualnej wygody. Nasz system
+	będzie również posiadać dodatkowe funkcje sterowania za pomocą \textbf{asystentów
+	głosowych}, co znacznie ułatwi zarządzanie skomplikowanym systemem informacyjnym
+	domu inteligentego.
+
+	Celem IoT Smart House jest nie tylko wprowadzenie na rynek innowacyjnego rozwiązania,
+	ale także czerpanie zysków z jego eksploatacji, co pozwoli zapewnić \textbf{wsparcie
+	techniczne} oraz aktualizacje systemu \textbf{na długie lata}. Jednocześnie, aby
+	sprostać zmieniającym się potrzebom użytkowników oraz nowym trendom technologicznym,
+	nasz system będzie wspierać i promować kontrybycje twórców niezależnych
+	poprzez wprowadzenie tzw. \textbf{sklepu społeczności}, gdzie programiści rozszerzeń
+	oraz twórcy motywów będą mogli dzielić się swoją pracą.
+
+	Bezpieczeństwo domu i rodziny to nasz największy priorytet. Dlatego też, nasza
+	aplikacja będzie wspierać wiele funkcji bezpieczeństwa takich jak automatyczne
+	powiadamianie, monitoring, czy alarm. Co się wiąże z bezpieczeństwem, wdrożymy
+	zaawansowane \textbf{środki ochrony prywatności}, aby uniknąć udostępniania wrażliwych
+	danych do większości systemów sterowanych przez IoT Smart House. Dodatkowo, w celu
+	zwielokrotnienia skuteczności naszych zabezpieczeń, kod rdzenia naszego
+	systemu będzie \textbf{w pełni zamknięty}, a jego artefakty będą
+	rozpowszechniane tylko po ówczesnym zaciemnieniu.
+
+	Dzięki swojej ponadczasowej jakości, nasza aplikacja będzie kontynuować swoją ewolucję
+	przez dziesiątki lat, odpowiadając na zmieniające się potrzeby i oczekiwania
+	użytkowników.
+
+	\section{Przypadki użycia}
+	\subsection{Aktorzy: }
+	\begin{itemize}
+		\item \textbf{Użytkownik bez konta} - użytkownik, który nie zarejestrował się
+			jeszcze w aplikacji
+
+		\item \textbf{Użytkownik zarejestrowany} - użytkownik, który nie zalogował się
+			jeszcze w aplikacji, ale posiada konto
+
+		\item \textbf{Użytkownik zalogowany} - użytkownik, który zalogował się do aplikacji
+
+		\item \textbf{Członek wirtualnego domu} - użytkownik, który został przyjęty przez
+			właścicielad do wirtualnego domu
+
+		\item \textbf{Właściciel / współwłaściciel wirtualnego domu} - użytkownik, który
+			stworzył wirtualny dom lub otrzymał uprawnienia od takiego użytkownika
+	\end{itemize}
+	\subsection{Przypadki użycia: }
+	\begin{enumerate}
+		\subsubsection{Logowanie i podstawowe opcje}
+		\begin{enumerate}
+			\item \textbf{Odebranie powiadomień} - odbieranie przez zalogowanego
+				użytkownika powiadomień dotyczących urządzeń oraz stanu domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Odebranie powiadomień}                                                                                                                                                                                                                                 \\
+						\hline
+						Opis                    & Odbieranie przez zalogowanego użytkownika powiadomień dotyczących urządzeń oraz stanu domu.                                                                                                                                                                    \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                     \\
+						\hline
+						Warunki początkowe      & W domu doszło do zdarzenia które może wymagać ludzkiej interwencji.                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe sukcesu & Powiadomienie zostało dostarczone.                                                                                                                                                                                                                             \\
+						\hline
+						Warunki końcowe porażki & Brak. Powiadomienia są kolejkowane bez limitu.                                                                                                                                                                                                                 \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik nie jest dostępny.
+
+\item Następuje kolejkowanie powiadomień.
+
+\item Użytkownik loguje się na swoje konto.
+
+\item System kontynuuje czynności w scenariuszu głównym dla każdego skolejkowanego powiadomienia.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Użytkownik nie jest dostępny.
+
+\item Następuje kolejkowanie powiadomień.
+
+\item Użytkownik loguje się na swoje konto.
+
+\item System kontynuuje czynności w scenariuszu głównym dla każdego skolejkowanego powiadomienia.\end{enumerate} \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zrealizowanie kodu dostępu dla gości} - realizacja przez
+				użytkownika uprzednio wygenerowanego przez właściciela domu kodu
+				umożliwiającego to, co właściciel wyznaczył.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Zrealizowanie kodu dostępu dla gości}                                                                                                                                          \\
+						\hline
+						Opis                    & Realizacja przez użytkownika uprzednio wygenerowanego przez właściciela domu kodu umożliwiającego dostęp określony przez właściciela.                                                  \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                             \\
+						\hline
+						Warunki początkowe      & Właściciel domu wygenerował kod dostępu dla gościa.                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Gość uzyskał dostęp do domu.                                                                                                                                                           \\
+						\hline
+						Warunki końcowe porażki & Gość nie uzyskał dostępu do domu.                                                                                                                                                      \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik otrzymuje od właściciela domu kod dostępu.
+
+\item Użytkownik wprowadza kod dostępu w aplikacji.
+
+\item System autoryzuje kod dostępu.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Kod dostępu jest niepoprawny, system odmawia dostępu.\end{itemize}                                                                                                \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Wylogowanie się z konta} - wylogowania się z konta przez
+				użytkownika zalogowanego.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Wylogowanie się z konta}                                                                                                                                                                         \\
+						\hline
+						Opis                    & Wylogowanie się z konta przez użytkownika zalogowanego.                                                                                                                                                  \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                               \\
+						\hline
+						Warunki początkowe      & Użytkownik jest zalogowany.                                                                                                                                                                              \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownik został wylogowany.                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Brak. Użytkownik zawsze zostanie wylogowany.                                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik jest zalogowany.
+
+\item Użytkownik wybiera opcję wylogowania się.
+
+\item System potwierdza wylogowanie i przekierowuje użytkownika na stronę logowania.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                                        \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Reset swojego hasła} - reset hasła przez użytkownika
+				zalogowanego.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Reset swojego hasła                                                                                                                                                                                                                                           \\
+						\hline
+						Opis                    & Resetowanie hasła przez użytkownika zalogowanego.                                                                                                                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                    \\
+						\hline
+						Warunki początkowe      & Użytkownik jest zalogowany.                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe sukcesu & Hasło zostało zmienione.                                                                                                                                                                                                                                      \\
+						\hline
+						Warunki końcowe porażki & Hasło nie zostało zmienione.                                                                                                                                                                                                                                  \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik jest zalogowany.
+
+\item Użytkownik wybiera opcję resetowania hasła.
+
+\item Użytkownik wprowadza nowe hasło i potwierdza.
+
+\item System akceptuje nowe hasło i przekierowuje użytkownika na stronę logowania.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Użytkownik anuluje resetowanie hasła.\end{itemize}                                                                                                                                                                                       \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Edycja danych konta} - edycja danych konta przez użytkownika
+				zalogowanego.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Edycja danych konta                                                                                                                                                                                                                 \\
+						\hline
+						Opis                    & Edycja danych konta przez użytkownika zalogowanego.                                                                                                                                                                                 \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Użytkownik jest zalogowany.                                                                                                                                                                                                         \\
+						\hline
+						Warunki końcowe sukcesu & Dane zostały zmienione.                                                                                                                                                                                                             \\
+						\hline
+						Warunki końcowe porażki & Dane nie zostały zmienione.                                                                                                                                                                                                         \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik jest zalogowany.
+
+\item Użytkownik wybiera opcję edycji danych konta.
+
+\item Użytkownik wprowadza nowe dane i potwierdza.
+
+\item System akceptuje nowe dane i zapisuje je w bazie.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Użytkownik anuluje edycję danych konta.
+
+\item System odrzuca nowe dane jeśli są niepoprawne.\end{itemize}                                                                                                     \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Stworzenie wirtualnego domu} - utworzenie nowego wirtualnego
+				domu przez użytkownika zalogowanego.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Stworzenie wirtualnego domu                                                                                                                                                                                                                                           \\
+						\hline
+						Opis                    & Utworzenie nowego wirtualnego domu przez użytkownika zalogowanego.                                                                                                                                                                                                    \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                         \\
+						\hline
+						Warunki początkowe      & Użytkownik jest zalogowany.                                                                                                                                                                                                                                           \\
+						\hline
+						Warunki końcowe sukcesu & Wirtualny dom został utworzony.                                                                                                                                                                                                                                       \\
+						\hline
+						Warunki końcowe porażki & Wirtualny dom nie został utworzony.                                                                                                                                                                                                                                   \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik jest zalogowany.
+
+\item Użytkownik wybiera opcję stworzenia nowego wirtualnego domu.
+
+\item Użytkownik wprowadza dane dotyczące nowego domu.
+
+\item System tworzy nowy wirtualny dom i przypisuje go do użytkownika.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Użytkownik przerywa tworzenie nowego wirtualnego domu.\end{itemize}                                                                                                                                                                              \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zainicjowanie przez użytkownika aktualizacji oprogramowania
+				systemu} - zainicjowanie przez użytkownika aktualizacji oprogramowania
+				przez użytkownika zalogowanego.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Zainicjowanie przez użytkownika aktualizacji oprogramowania systemu                                                                                                                                                                                                             \\
+						\hline
+						Opis                    & Zainicjowanie przez użytkownika aktualizacji oprogramowania systemu przez użytkownika zalogowanego.                                                                                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                      \\
+						\hline
+						Warunki początkowe      & Użytkownik jest zalogowany.                                                                                                                                                                                                                                                     \\
+						\hline
+						Warunki końcowe sukcesu & Aktualizacja została zainstalowana.                                                                                                                                                                                                                                             \\
+						\hline
+						Warunki końcowe porażki & Aktualizacja nie została zainstalowana.                                                                                                                                                                                                                                         \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik jest zalogowany.
+
+\item Użytkownik wybiera opcję aktualizacji oprogramowania.
+
+\item System sprawdza dostępność aktualizacji i rozpoczyna proces pobierania aktualizacji.
+
+\item System instaluje pobraną paczkę aktualizacji.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Użytkownik anuluje pobieranie aktualizacji oprogramowania.\end{itemize}                                                                                                                                                                                    \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zalogowanie się na konto} - zalogowanie się na konto przez
+				użytkownika zarejestrowanego
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Zalogowanie się na konto                                                                                                                                                                                                                                                                                \\
+						\hline
+						Opis                    & Zalogowanie się na konto przez użytkownika zarejestrowanego.                                                                                                                                                                                                                                            \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Użytkownik zarejestrowany\end{itemize}                                                                                                                                                                                                                                             \\
+						\hline
+						Warunki początkowe      & Użytkownik nie jest zalogowany.                                                                                                                                                                                                                                                                         \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownik został zalogowany.                                                                                                                                                                                                                                                                           \\
+						\hline
+						Warunki końcowe porażki & Użytkownik nie został zalogowany.                                                                                                                                                                                                                                                                       \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik otwiera stronę logowania.
+
+\item Użytkownik wprowadza swoje dane logowania.
+
+\item System autoryzuje użytkownika i przekierowuje go do panelu użytkownika.\end{enumerate}                                                                                             \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Dane logowania są nieprawidłowe, system wyświetla komunikat o błędzie.
+
+\item System powiadamia adres e-mail powiązany z kontem o błędnej próbie logowania.
+
+\item System powiadamia wszystkich użytkowników wirtualnych domów do których dodany jest użytkownik.\end{enumerate} \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Tworzenie konta} - tworzenie konta przez użytkownika bez
+				konta.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Tworzenie konta                                                                                                                                                                                                                                                          \\
+						\hline
+						Opis                    & Tworzenie konta przez użytkownika bez konta.                                                                                                                                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Użytkownik bez konta\end{itemize}                                                                                                                                                                                                                   \\
+						\hline
+						Warunki początkowe      & Użytkownik nie ma konta.                                                                                                                                                                                                                                                 \\
+						\hline
+						Warunki końcowe sukcesu & Konto zostało utworzone.                                                                                                                                                                                                                                                 \\
+						\hline
+						Warunki końcowe porażki & Konto nie zostało utworzone.                                                                                                                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik otwiera stronę rejestracji.
+
+\item Użytkownik wprowadza dane rejestracyjne i potwierdza.
+
+\item System tworzy nowe konto i przekierowuje na stronę logowania.\end{enumerate}                                                           \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Dane rejestracyjne nie spełniają wymagań lub już istnieje konto o podanych danych, system wyświetla komunikat o błędzie. Komunikat nigdy nie ujawnia tego, że inne konto już ma te same dane, tylko zawsze mówi o błędnych danych.\end{enumerate} \\
+						\hline
+					\end{tabular}
+				\end{table}
+		\end{enumerate}
+
+		\subsubsection{Harmonogram, kontakty, powiadomienia}
+		\begin{enumerate}
+			\item \textbf{Dodanie / usunięcie wpisu z kalendarza domowego} - dodanie
+				lub usunięcie wpisu z kalendarza domowego przez członka wirtualnego domu.
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Dodanie / usunięcie wpisu z kalendarza domowego}                                                                                                                                                                                                                                                                                                                                                                                             \\
+						\hline
+						Opis                    & dodanie lub usunięcie wpisu z kalendarza domowego przez członka wirtualnego domu                                                                                                                                                                                                                                                                                                                                                                     \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                                                                                                                           \\
+						\hline
+						Warunki początkowe      & Użytkownik ma prawo do edycji kalendarza                                                                                                                                                                                                                                                                                                                                                                                                             \\
+						\hline
+						Warunki końcowe sukcesu & Dodanie/usunięcie zostało wykonane                                                                                                                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe porażki & Brak zmiany w kalendarzu domowym                                                                                                                                                                                                                                                                                                                                                                                                                     \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję wyświetlenia kalendarza
+
+\item Aplikacja wyświetla wszystkie wpisy dodane przez członków wirtualnego domu
+
+\item Użytkownik może kliknąć "Dodaj nowy wpis" lub kliknąć jeden ze swoich wpisów
+
+\item Aplikacja wyświetli formularz do edycji wpisu
+
+\item Użytkownik może kliknąć opcję "Usuń wpis"
+
+\item Aplikacja wyświetla powiadomienie o sukcesie operacji\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 5: Gdy użytkownik spróbuje usunąć nieswój wpis, to aplikacja o tym poinformuje i anuluje operację.\end{itemize}                                                                                                                                                                                                                                                                                                             \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Usunięcie wpisów innych domowników kalendarza} - usunięcie
+				przez właściciela wpisów innych członków w celu zwiększenia czytelności
+				kalendarza
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Usunięcie wpisów innych domowników kalendarza}                                                                                                                                                                                                                                                                                 \\
+						\hline
+						Opis                    & usunięcie przez właściciela wpisów innych członków w celu zwiększenia czytelności kalendarza                                                                                                                                                                                                                                           \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & W kalendarzu istnieją wpisy członków wirtualnego domu                                                                                                                                                                                                                                                                                  \\
+						\hline
+						Warunki końcowe sukcesu & Wpis został usunięty                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe porażki & Wpisy kalendarza nie uległy zmianie                                                                                                                                                                                                                                                                                                    \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję wyświetlenia kalendarza
+
+\item Aplikacja wyświetla wszystkie wpisy dodane przez członków wirtualnego domu
+
+\item Jeżeli użytkownik jest właścicielem domu to może usunąc dowolny wpis
+
+\item Aplikacja wyświetla powiadomienie o sukcesie operacji\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 3: Jeżeli użytkownik nie jest właścicielem, to pojawi się powiadomienie, a operacja anulowana.\end{itemize}                                                                                                                                                                                                   \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Stworzenie niestandardowego harmonogramu} - stworzenie
+				niestandardowego harmonogramu pracy urządzeń IoT.
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Stworzenie niestandardowego harmonogramu}                                                                                                                                                                                                                                                                                                    \\
+						\hline
+						Opis                    & stworzenie niestandardowego harmonogramu pracy urządzeń IoT                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                           \\
+						\hline
+						Warunki początkowe      & -                                                                                                                                                                                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Dodano harmonogram                                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe porażki & Harmonogram nie został dodany                                                                                                                                                                                                                                                                                                                        \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję wyświetlenia listy harmonogramów pracy urządzeń IoT
+
+\item Użytkownik może kliknąć opcję "Dodaj nowy harmonogram"
+
+\item Aplikacja wyświetla edytor harmonogramów
+
+\item Użytkownik używając narzędzia tworzy harmonogram
+
+\item Użytkownik zapisuje harmonogram\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 1: Jeżeli lista jest pusta, aplikacja wyświetli taką informację\end{itemize}                                                                                                                                                                                                                                                \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Edycja niestandardowego harmonogramu} - edycja
+				niestandardowego harmonogramu pracy urządzeń IoT.
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Edycja niestandardowego harmonogramu                                                                                                                                                                                                                                                                                                                              \\
+						\hline
+						Opis                    & edycja niestandardowego harmonogramu pracy urządzeń IoT                                                                                                                                                                                                                                                                                                           \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu
+
+\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                     \\
+						\hline
+						Warunki początkowe      & Jeżeli członek wirtualnego domu, to musi posiadać swoje harmonogramy                                                                                                                                                                                                                                                                                              \\
+						\hline
+						Warunki końcowe sukcesu & Zedytowano harmonogram                                                                                                                                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Brak zmiany w harmonogramie                                                                                                                                                                                                                                                                                                                                       \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję wyświetlenia listy harmonogramów pracy urządzeń IoT
+
+\item Użytkownik może kliknąć dany harmonogram w celu jego edycji
+
+\item Aplikacja wyświetla edytor harmonogramów
+
+\item Użytkownik używając narzędzia nanosi poprawki do harmonogramu
+
+\item Użytkownik zapisuje zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 1: Jeżeli lista jest pusta, aplikacja wyświetli taką informację
+
+\item AD. 2: Jeżeli użytkownik nie jest właścicielem domu, to edytować może wyłącznie swoje harmonogramy\end{itemize}                                                                                                                                                   \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zmiana statusu harmonogramu pracy} - zmieniając status można
+				m.in. aktywować lub dezaktywować harmonogram
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Zmiana statusu harmonogramu pracy                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Opis                    & zmieniając status można m.in. aktywować lub dezaktywować harmonogram                                                                                                                                                                                                                                                                                \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Harmonogram nie został wyłączony przez właściciela wirtualnego domu                                                                                                                                                                                                                                                                                 \\
+						\hline
+						Warunki końcowe sukcesu & Harmonogram zmienił status                                                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Warunki końcowe porażki & Harmonogram nie zmienił statusu                                                                                                                                                                                                                                                                                                                     \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję wyświetlenia listy harmonogramów pracy urządzeń IoT
+
+\item Użytkownik może kliknąć w ikonkę statusu wybranego harmonogramu
+
+\item Aplikacja wyświetla możliwe statusy do ustawienia
+
+\item Użytkownik wybiera opcję "Aktywuj"
+
+\item Użytkownik zapisuje zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 1: Jeżeli lista jest pusta, aplikacja wyświetli taką informację
+
+\item AD. 4: Jeżeli harmonogram wyłączył właściciel, to inni użytkownicy nie będą mieli opcji "Aktywuj"\end{itemize}                                                                                                                                      \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Konfiguracja listy kontaktów do powiadamiania w nagłych
+				sytuacjach} - konfiguracja listy kontaktów do powiadamiania w nagłych
+				sytuacjach przez członka wirtualnego domu.
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Konfiguracja listy kontaktów do powiadamiania w nagłych sytuacjach                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       \\
+						\hline
+						Opis                    & konfiguracja listy kontaktów do powiadamiania w nagłych sytuacjach przez członka wirtualnego domu                                                                                                                                                                                                                                                                                                                                                                                                                                                        \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               \\
+						\hline
+						Warunki początkowe      & -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \\
+						\hline
+						Warunki końcowe sukcesu & Zmiana w liście kontaktów                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Brak zmian w liście kontaków                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję "Ustawienia"
+
+\item Aplikacja wyświetla listę Ustawień
+
+\item Użytkownik może kliknąć w opcję "Powiadomienia w razie nagłych sytuacji"
+
+\item Aplikacja wyświetla listę ustawień
+
+\item Użytkownik wybiera opcję "Konfiguruj listę kontaktów"
+
+\item Aplikacja wyświetla listę kontaktów
+
+\item Użytkownik może wybrać dodanie lub edycję kontaktu
+
+\item Aplikacji wyświetlarz formularz z danymi
+
+\item Użytkownik zapisuje dane
+
+\item Aplikacje uaktualnia listę\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Wyciszanie powiadomień na określony czas} - wyciszanie
+				powiadomień na określony czas przez członka wirtualnego domu.
+		\end{enumerate}
+
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{|c|p{7cm}|}
+				\hline
+				Nazwa                   & Wyciszanie powiadomień na określony czas                                                                                                                                                                                                                                                                                                                                                                                                                                 \\
+				\hline
+				Opis                    & wyciszanie powiadomień na określony czas przez członka wirtualnego domu                                                                                                                                                                                                                                                                                                                                                                                                  \\
+				\hline
+				Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                                                                                                                                               \\
+				\hline
+				Warunki początkowe      & -                                                                                                                                                                                                                                                                                                                                                                                                                                                                        \\
+				\hline
+				Warunki końcowe sukcesu & Wyciszono powiadomienia na określony czas                                                                                                                                                                                                                                                                                                                                                                                                                                \\
+				\hline
+				Warunki końcowe porażki & Powiadomienia nie zostały wyciszone                                                                                                                                                                                                                                                                                                                                                                                                                                      \\
+				\hline
+				Scenariusz główny       & \begin{enumerate}\item Użytkownik, na głównym ekranie, wybiera opcję "Ustawienia"
+
+\item Aplikacja wyświetla listę Ustawień
+
+\item Użytkownik może kliknąć w opcję "Powiadomienia"
+
+\item Aplikacja wyświetla listę ustawień
+
+\item Użytkownik może kliknąc w opcję "Wycisz"
+
+\item Aplikacja wyświetla okno z zapytaniem na jaki okres
+
+\item Użytkownik może wpisać okres czasu i zaakceptować
+
+\item Aplikacja Wycisza powiadomienia na określony czas\end{enumerate} \\
+				\hline
+				Scenariusz alternatywny & \begin{itemize}\item AD. 7: W przypadku błędnego formatu aplikacja poprosi o ponownie wpisanie okresu\end{itemize}                                                                                                                                                                                                                                                                                                                                                       \\
+				\hline
+			\end{tabular}
+		\end{table}
+
+		\subsubsection{Wykorzystanie urzadzeń IoT}
+		\begin{enumerate}
+			\item \textbf{Odblokowanie inteligentnego zamka do drzwi z aplikacji} -
+				odblokowanie inteligentnego zamka do drzwi z poziomu aplikacji przez
+				członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Odblokowanie inteligentnego zamka do drzwi z aplikacji}                                                                                                                                          \\
+						\hline
+						Opis                    & odblokowanie inteligentnego zamka do drzwi z poziomu aplikacji przez członka wirtualnego domu                                                                                                            \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                               \\
+						\hline
+						Warunki początkowe      & Zamek drzwi frontowych jest zablokowany                                                                                                                                                                  \\
+						\hline
+						Warunki końcowe sukcesu & Zamek drzwi frontowych został odblokowany                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Zamek drzwi frontowych jest zablokowany                                                                                                                                                                  \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o odblokowanie zamka
+
+\item Serwer sprawdza permisje stałe oraz nadane na czas określony
+
+\item Serwer otwiera zamek w drzwiach\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad ii. Serwer stwierdza, że klient nie posiada uprawnień i odmawia otwarcia. Koniec\end{itemize}                                                                                    \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zarządzanie roletami w domu} - zarządzanie systemem rolet
+				przez członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Zarządzanie roletami w domu}                                                                                                                                                                                                                          \\
+						\hline
+						Opis                    & zarządzanie systemem rolet przez członka wirtualnego domu                                                                                                                                                                                                     \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                    \\
+						\hline
+						Warunki początkowe      & Rolety mogą być użytkowane (np. są połączone z systemem)                                                                                                                                                                                                      \\
+						\hline
+						Warunki końcowe sukcesu & Rolety zostały dostosowane do nowych wytycznych                                                                                                                                                                                                               \\
+						\hline
+						Warunki końcowe porażki & Stan rolet się nie zmienił lub zmienił się, ale nie spełnił wszystkich wymagań klienta                                                                                                                                                                        \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie aktualnego stanu rolet
+
+\item Serwer wysyła aktualny stan rolet
+
+\item Klient zgłasza modyfikacje jakie chce wprowadzić w stanie rolet
+
+\item Serwer wprowadza zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iv) Serwer zwraca informację zwrotną, że roleta nie może być zamknięta dopóki okno jest otwarte. Koniec\end{itemize}                                                                                                                 \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Podgląd obrazu z kamery monitoringu przy drzwiach
+				wejściowych} - podgląd kamery frontowej przez członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Podgląd obrazu z kamery monitoringu przy drzwiach wejściowych}                                                                                                                                                                              \\
+						\hline
+						Opis                    & podgląd kamery frontowej przez członka wirtualnego domu                                                                                                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Kamera jest gotowa do użytkowania (jest podłączona i nie jest użytkowana przez innych członków domu)                                                                                                                                                \\
+						\hline
+						Warunki końcowe sukcesu & Obraz z kamery został przekazany klientowi                                                                                                                                                                                                          \\
+						\hline
+						Warunki końcowe porażki & Obraz z kamery nie został przekazany klientowi                                                                                                                                                                                                      \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie widoku z kamery
+
+\item Serwer rozpoczyna streaming z kamery drzwi frontowych
+
+\item Klient zgłasza zakończenie oglądania
+
+\item Serwer zatrzymuje streaming\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (ii) Inny klient użytkuje obecnie kamerę. Koniec
+
+\item Ad (iii) Klient nie odpowiada, serwer zatrzymuje streaming. Koniec\end{itemize}                                                                                     \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=0.36\paperwidth]{diag_czynn_obraz_z_kamer.png}
+				\end{figure}
+
+			\item \textbf{Przeprowadzanie połączeń głosowych z kamerą przy drzwiach} -
+				prowadzenie wideo rozmów w aplikacji z osobą stojącą przed drzwiami
+				frontowymi przez członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Przeprowadzanie połączeń głosowych z kamerą przy drzwiach}                                                                                                                                                                                                       \\
+						\hline
+						Opis                    & prowadzenie wideo rozmów w aplikacji z osobą stojącą przed drzwiami frontowymi przez członka wirtualnego domu                                                                                                                                                            \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu
+
+\item Użytkownik niezalogowany\end{itemize}                                                                                                                                                                               \\
+						\hline
+						Warunki początkowe      & Kamera jest gotowa do użytkowania (jest podłączona)                                                                                                                                                                                                                      \\
+						\hline
+						Warunki końcowe sukcesu & Nawiązano połączenie między kamerą - użytkownik niezalogowany oraz członkiem domu                                                                                                                                                                                        \\
+						\hline
+						Warunki końcowe porażki & Nie nawiązano połączenia między kamerą - użytkownik niezalogowany oraz członkiem domu                                                                                                                                                                                    \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Urządzenie telekomunikacyjne drzwi wysyła zapytanie o połączenie video z członkiem domu
+
+\item Serwer rozpoczyna połączenie kamery drzwi frontowych z członkiem
+
+\item Członek odbiera połączenie
+
+\item Członek kończy połączenie\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iii) Żaden członek nie odebrał połączenia. Koniec
+
+\item Ad (iv) Utrata połączenia z Członkiem. Koniec\end{itemize}                                                                                                                             \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Odblokowanie dostępu do smart TV dla dzieci w określonych
+				godzinach} - zarządzanie dostępem do telewizora dla dzieci przez członka
+				wirtualnego domu z odpowiednimi uprawnieniami.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Odblokowanie dostępu do smart TV dla dzieci w określonych godzinach}                                                                                                                            \\
+						\hline
+						Opis                    & zarządzanie dostępem do telewizora dla dzieci przez członka wirtualnego domu z odpowiednimi uprawnieniami                                                                                               \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu
+
+\item Członek wirtualnego domu o roli dziecka\end{itemize}                                                                                               \\
+						\hline
+						Warunki początkowe      & W domu są użytkownicy o roli dziecka                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Zmieniono dostęp do smart TV według wytycznych klienta                                                                                                                                                  \\
+						\hline
+						Warunki końcowe porażki & Nie zmieniono dostępu do smart TV według wytycznych klienta                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie o odblokowanie dostępu do smart TV dla dzieci w określonych godzinach
+
+\item Serwer uaktualnia harmonogram dostępu do smart TV dla dzieci\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                                       \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zmiana ustawień termostatu i klimatyzacji w pomieszczeniach}
+				- zarządzanie ustawieniami termostatu i klimatyzacji przez członka
+				wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Zmiana ustawień termostatu i klimatyzacji w pomieszczeniach}                                                                                                                                                                                                                                                                                                                         \\
+						\hline
+						Opis                    & zarządzanie ustawieniami termostatu i klimatyzacji przez członka wirtualnego domu                                                                                                                                                                                                                                                                                                            \\
+						\hline
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki początkowe      & Termostat i klimatyzacja mogą być użytkowane (np. są połączone z systemem)                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe sukcesu & Termostat i klimatyzacja zostały dostosowane do nowych wytycznych                                                                                                                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Stan termostatu i klimatyzacji się nie zmienił lub zmienił się, ale nie spełnił wszystkich wymagań klienta                                                                                                                                                                                                                                                                                   \\
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie aktualnego stanu termostatu i klimatyzacji w pomieszczeniach
+
+\item Serwer wysyła aktualny stan termostatu, klimatyzacji i temperatury w pomieszczeniach
+
+\item Klient zgłasza modyfikacje jakie chce wprowadzić w stanie termostatu i klimatyzacji w pomieszczeniach
+
+\item Serwer wprowadza zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iv) Serwer wysyła informację zwrotną, że nie można włączyć klimatyzacji, ponieważ w pomieszczeniu są otwarte okna. Koniec\end{itemize}                                                                                                                                                                                                                              \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Sprawdzanie stanu samochodów w wirtualnym domu} -
+				sprawdzanie stanu samochodów przez członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Sprawdzanie stanu samochodów w wirtualnym domu}                                                                                                                                                                                          \\
+						\hline
+						Opis                    & sprawdzanie stanu samochodów przez członka wirtualnego domu                                                                                                                                                                                      \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                       \\
+						\hline
+						Warunki początkowe      & Samochody mogą udostępniać dane (np. są połączone z systemem)                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Dane od samochodów zostały zebrane i przekazane klientowi                                                                                                                                                                                        \\
+						\hline
+						Warunki końcowe porażki & Dane od samochodów nie zostały zebrane lub nie zostały przekazane klientowi                                                                                                                                                                      \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie aktualnego stanu samochodów
+
+\item Serwer wysyła zapytanie do samochodów o podanie swoich aktualnych stanów
+
+\item Serwer wysyła zebrane dane do klienta\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (ii) Serwer nie znajduje adekwatnych pojazdów i wysyła odpowiednią informację zwrotną. Koniec\end{itemize}                                                                                                               \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=0.36\paperwidth]{
+						diag_czynn_stany_samochodow.png
+					}
+				\end{figure}
+
+			\item \textbf{Możliwość uruchomienia świateł} - możliwość uruchomienia
+				świateł z poziomu aplikacji przez członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Możliwość uruchomienia świateł}                                                                                                                                                                                                                             \\
+						\hline
+						Opis                    & możliwość uruchomienia świateł z poziomu aplikacji przez członka wirtualnego domu                                                                                                                                                                                   \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Światła mogą być użytkowane (np. są połączone z systemem)                                                                                                                                                                                                           \\
+						\hline
+						Warunki końcowe sukcesu & Światła zostały dostosowane do nowych wytycznych                                                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe porażki & Stan świateł się nie zmienił lub zmienił się, ale nie spełnił wszystkich wymagań klienta                                                                                                                                                                            \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie aktualnego stanu świateł
+
+\item Serwer wysyła aktualny stan świateł
+
+\item Klient zgłasza modyfikacje jakie chce wprowadzić w stanie świateł
+
+\item Serwer wprowadza zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iv) Serwer nie może wprowadzić zmian i wysyła odpowiednią informację zwrotną do klienta. Koniec\end{itemize}                                                                                                                               \\
+						\\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zarządzanie AGD} - zarządzanie AGD z poziomu aplikacji przez
+				członka wirtualnego domu.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Zarządzanie AGD}                                                                                                                                                                                                                                                           \\
+						\hline
+						Opis                    & możliwość uruchomienia urządzeń AGD z poziomu aplikacji przez członka wirtualnego domu                                                                                                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                         \\
+						\hline
+						Warunki początkowe      & Urządzenia AGD mogą być użytkowane (np. są połączone z systemem)                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe sukcesu & Urządzenia AGD zostały dostowowane do nowych wytycznych                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Stan urządzeń AGD się nie zmienił lub zmienił się, ale nie spełnił wszystkich wymagań klienta                                                                                                                                                                                      \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie aktualnego stanu urządzeń AGD
+
+\item Serwer wysyła aktualny stan urządzeń AGD
+
+\item Klient zgłasza modyfikacje jakie chce wprowadzić w stanie urządzeń AGD
+
+\item Serwer wprowadza zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iv) Serwer nie może wprowadzić zmian i wysyła odpowiednią informację zwrotną do klienta. Koniec\end{itemize}                                                                                                                                              \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zarządzanie monitoringiem} - zarządzanie monitoringiem przez
+				członka wirtualnego domu z odpowiednimi uprawnieniami.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Zarządzanie monitoringiem}                                                                                                                                                                                                                                              \\
+						\hline
+						Opis                    & możliwość zarządzania monitoringiem z poziomu aplikacji przez członka wirtualnego domu                                                                                                                                                                                          \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                      \\
+						\hline
+						Warunki początkowe      & Urządzenia monitoringu mogą być użytkowane (np. są połączone z systemem)                                                                                                                                                                                                        \\
+						\hline
+						Warunki końcowe sukcesu & Urządzenia monitoringu zostały dostowowane do nowych wytycznych                                                                                                                                                                                                                 \\
+						\hline
+						Warunki końcowe porażki & Stan urządzeń monitoringu się nie zmienił lub zmienił się, ale nie spełnił wszystkich wymagań klienta                                                                                                                                                                           \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o wyświetlenie aktualnego stanu monitoringu
+
+\item Serwer wysyła aktualny stan monitoringu
+
+\item Klient zgłasza modyfikacje jakie chce wprowadzić w stanie monitoringu
+
+\item Serwer wprowadza zmiany\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iv) Serwer nie może wprowadzić zmian i wysyła odpowiednią informację zwrotną do klienta. Koniec\end{itemize}                                                                                                                                           \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=0.36\paperwidth]{giad_czynn_zarz_monitor.png}
+				\end{figure}
+
+			\item \textbf{Pobranie danych z monitoringu} przez członka wirtualnego
+				domu z odpowiednimi uprawnieniami.
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Pobranie danych z monitoringu}                                                                                                                                   \\
+						\hline
+						Opis                    & możliwość pobrania danych z monitoringu z poziomu aplikacji                                                                                                              \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                               \\
+						\hline
+						Warunki początkowe      & Urządzenia przechowujące nagrania monitoringu mogą być użytkowane (np. są połączone z systemem)                                                                          \\
+						\hline
+						Warunki końcowe sukcesu & Nagrania monitoringu zostały przekazane klientowi                                                                                                                        \\
+						\hline
+						Warunki końcowe porażki & Nagrania monitoringu nie zostały przekazane klientowi                                                                                                                    \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Klient wysyła zapytanie do serwera o pobranie danych z konkretnego okresu czasu z monitoringu
+
+\item Serwer wysyła żadane nagrania\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (ii) Serwer nie posiada żądanych nagrań, zwraca odpowiednią informację. Koniec\end{itemize}                                                      \\
+						\hline
+					\end{tabular}
+				\end{table}
+		\end{enumerate}
+
+		\subsubsection{Automatyzacja i statystyki}
+		\begin{enumerate}
+			\item \textbf{Sprawdzanie statystyk wirtualnego domu} - możliwość
+				sprawdzenia statystyk wirtualnego domu przez członka wirtualnego domu.
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Sprawdzanie statystyk wirtualnego domu}                                                                                                                                                                                                                                               \\
+						\hline
+						Opis                    & możliwość sprawdzenia statystyk wirtualnego domu przez członka wirtualnego domu                                                                                                                                                                                                               \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                             \\
+						\hline
+						Warunki początkowe      & Użytkownicy korzystali wcześniej z usług wirtualnego domu przez jakiś czas                                                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownikowi zostają przedstawione statystyki wirtualnego domu                                                                                                                                                                                                                               \\
+						\hline
+						Warunki końcowe porażki & Użytkownik nie otrzymał dostępu do statystyk.                                                                                                                                                                                                                                                 \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wybiera opcje "statystyki"
+
+\item Użytkownik wysyła zapytanie do serwera o wyświetlenie zużytych zasobów jego domu
+
+\item Aplikacja wyświetla zużyte przez członków domu zasoby
+
+\item Użytkownik zamyka statystyki po zakończeniu oglądania\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                                                                                                                             \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Wyświatlenie użytkowników znajdujących się w domu} -
+				uzyskanie listy użytkowników obecnych w domu przez członka o odpowiednio
+				nadanych uprawnieniach
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Wyświatlenie użytkowników znajdujących się w domu}                                                                                                                                                                                                                                        \\
+						\hline
+						Opis                    & uzyskanie listy użytkowników obecnych w domu przez członka o odpowiednio nadanych uprawnieniach                                                                                                                                                                                                   \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                 \\
+						\hline
+						Warunki początkowe      & Wirtualny dom posiada dodanych członków                                                                                                                                                                                                                                                           \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownik otrzymuję listę osób znajdujących się aktualnie w domu i należących do wirtualnego domu                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Użytkownik nie dostaje listy osób znajdujących się w domu                                                                                                                                                                                                                                         \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wybiera opcję "Aktywni domownicy"
+
+\item Użytkownik wysyła zapytanie do serwera o wyświetlenie listy użytkowników znajdujących się w domu
+
+\item Aplikacja wyświetla obecnych w domu użytkowników
+
+\item Użytkownik zamyka wyświetlony komunikat\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & W domu nie są obecni żadni domownicy, w aplikacji wyświetla się mówiący o tym stosowny komunikat                                                                                                                                                                                                  \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Sprawdzenie historii aktywności urządzeń w domu} - uzyskanie
+				historii działania urządzenia wraz z członakami, którzy go użytkowali
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Sprawdzenie historii aktywności urządzeń w domu}                                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Opis                    & uzyskanie historii działania urządzenia wraz z członakami, którzy go użytkowali                                                                                                                                                                                                                                                                                         \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                                                                                       \\
+						\hline
+						Warunki początkowe      & Urządzenie, którego historię chcemy sprawdzić zostało wcześniej dodane to wirtualnego domu                                                                                                                                                                                                                                                                              \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownik otrzymuje historię działania urządzenia                                                                                                                                                                                                                                                                                                                      \\
+						\hline
+						Warunki końcowe porażki & Użytkownikowi nie zostaje wyświetlona historia urządzenia                                                                                                                                                                                                                                                                                                               \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wybiera opcję "Historia domu"
+
+\item Użytkownik wybiera urządzenie którego historie chce zobaczyć
+
+\item Użytkownik wysyła zapytanie do serwera o wyświetlenie statystyk aktywności wybranego urządzenia
+
+\item Aplikacja wyświetla historię aktywności wybranego urządzenia
+
+\item Użytkownik zamyka wyświetlone okno\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                                                                                                                                                                                                       \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Smart House Wrapped\textsuperscript{TM} - statystyki na
+				koniec miesiąca} - uzyskanie statystyk na najróżniesze tematy o
+				wszystkich członakach domu
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Smart House Wrapped\textsuperscript{TM} - statystyki na koniec miesiąca}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Opis                    & uzyskanie statystyk na najróżniesze tematy o wszystkich członakach domu                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \\
+						\hline
+						Warunki początkowe      & Wirtualny dom był już wcześniej wykorzystywany w życiu codziennym i zdążył zgromadzić statystyki                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Warunki końcowe sukcesu & Wyświetlono podsumowanie miesiąca                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         \\
+						\hline
+						Warunki końcowe porażki & Podsumowanie miesiąca nie zostało wyświetlone                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Funkcja pojawia się zawsze pod koniec miesiąca w menu aplikacji
+
+\item Użytkownik wybiera opcję "Smart House Wrapped\textsuperscript{TM}"
+
+\item Aplikacja wyświetla użytkownikowi prezentację złożoną z najważniejszych statystyk domu z minionego miesiąca, w tle prezentacji gra nastrojowa muzyka
+
+\item Użytkownik ma możliwość przewijania prezentacji w przód lub w tył
+
+\item Użytkownik przeszedł wszystkie slajdy, prezentacja kończy się
+
+\item Użytkownik ma możliwość udostępnienia swojego "Smart House Wrapped\textsuperscript{TM}" w social mediach\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 4: Użytkownik nie wykona żadnej akcji, po jakimś czasie prezentacja sama przechodzi do następnego slajdu
+
+\item AD. 6: Użytkownik nie chcę udostępnić swojego "Smart House Wrapped\textsuperscript{TM}", po zakończeniu prezentacji po prostu ją zamyka\end{itemize}                                                                                                                                                                                                                                                                                                             \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Wyświetlanie aktualnego stanu zabezpieczeń} - podgląd stanu
+				zabezpieczeń (działanie kamer, opuszczenie rolet, włączenie świateł)
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Wyświetlanie aktualnego stanu zabezpieczeń}                                                                                                                                                                                                                                                                                                                                                                                                              \\
+						\hline
+						Opis                    & podgląd stanu zabezpieczeń (działanie kamer, opuszczenie rolet, włączenie świateł)                                                                                                                                                                                                                                                                                                                                                                               \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Warunki początkowe      & Dom posiada dodane zabezpieczenia                                                                                                                                                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownik uzyskuje informacje o stanie zabezpieczeń jego domu                                                                                                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe porażki & Użytkownikowi nie zostaje wyświetlona informacja o zabezpieczeniach                                                                                                                                                                                                                                                                                                                                                                                              \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wybiera opcje "Bezpieczeństwo"
+
+\item Użytkownik wybiera opcje "Sprawdź aktualny stan zabezpieczeń"
+
+\item Użytkownik wysyła zapytanie do serwera o stan zabezpieczeń
+
+\item Serwer pobiera dane dotyczące stanu innych urządzeń domowych(kamer, rolet, świateł)
+
+\item Aplikacja wyświetla stan wyżej wymienionych urządzeń domowych
+
+\item Użytkownik zamyka okno stanu zabezpieczeń po zakończeniu oglądania\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 5: Aplikacja wyświetla stosowny komunikat, jeśli żadne z urządzeń bezpieczeństwa domowego nie zostało odnalezione\end{itemize}                                                                                                                                                                                                                                                                                                          \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Rejestracja asystenta głosowego innej firmy w naszym domu} -
+				zainstalowanie, innego niż domyślny, asystenta głosowego do komunikacji
+				z systemem
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Rejestracja asystenta głosowego innej firmy w naszym domu}                                                                                                                                                                                                                                                                                                                                 \\
+						\hline
+						Opis                    & zainstalowanie, innego niż domyślny, asystenta głosowego do komunikacji z systemem                                                                                                                                                                                                                                                                                                                 \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                                                                                                                  \\
+						\hline
+						Warunki początkowe      & Asystent głosowy, który nas interesuje znajduje się w Marketplace                                                                                                                                                                                                                                                                                                                                  \\
+						\hline
+						Warunki końcowe sukcesu & Asystent głosowy zostaje zmieniony na ten wybrany przez użytkownika                                                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zmienić asystenta głosowego                                                                                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Przejście przez użytkownika do Marketplace
+
+\item Wyszukanie interesującego go asystenta głosowego
+
+\item Pobranie wyszukanego przez użytkownika asystenta
+
+\item Przejście przez użytkownika do ustawień aplikacji
+
+\item Wybranie opcji "ustawienia dźwięku"
+
+\item Zmiana asystenta głosowego przez użytkownika na tego pobranego wcześniej z Marketplace\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                                                                                                                                                                                                                                  \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Wysłanie zapytania lub polecenia w języku natrualnym do
+				wybranego asystenta} - asystent interpretuje zapytanie i realizuje
+				odpowiednie instrukcje w oparciu o inne use-casy
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Wysłanie zapytania lub polecenia w języku natrualnym do wybranego asystenta}                                                                                                                                                                                                                                                     \\
+						\hline
+						Opis                    & asystent interpretuje zapytanie i realizuje odpowiednie instrukcje w oparciu o inne use-casy                                                                                                                                                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                                                        \\
+						\hline
+						Warunki początkowe      & Wirtualny dom posiada zainstalowanego odpowiedniego asystenta głosowego                                                                                                                                                                                                                                                                  \\
+						\hline
+						Warunki końcowe sukcesu & Zapytanie użytkownika zostaje zrealizowane                                                                                                                                                                                                                                                                                               \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zrealizować zapytania użytkownika                                                                                                                                                                                                                                                                                          \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wypowiada polecenie lub zapytanie zaczynając swoje zdanie od słowa "SmartHouse"
+
+\item Asystent nasłuchuje komendy użytkownika i stara się dopasować ją do jednej z funkcjonalności systemu
+
+\item Na podstawie pytania lub polecenia użytkownika asystent wykonuje oczekiwaną czynność\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 2: Asystent nie jest w stanie dopasować słów użytkownika do funkcjonalności systemu, na ekranie aplikacji pojawia się prośba o powtórzenie polecenia\end{itemize}                                                                                                                                               \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Przesyłanie danych do firm zewnętrznych z danymi do
+				rozliczeń} - przesyłanie np. danych odczytanych z licznika prądu lub wody
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Przesyłanie danych do firm zewnętrznych z danymi do rozliczeń}                                                                                                                                                                                                                                                    \\
+						\hline
+						Opis                    & przesyłanie np. danych odczytanych z licznika prądu lub wody                                                                                                                                                                                                                                                              \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel/współwłaściciel domu\end{itemize}                                                                                                                                                                                                                                                         \\
+						\hline
+						Warunki początkowe      & Liczniki i urządzenia odczytu muszą być poprawnie zainstalowane i skonfigurowane                                                                                                                                                                                                                                          \\
+						\hline
+						Warunki końcowe sukcesu & Odczytane z liczników dane zostają odesłane do właściwych firm                                                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Nie udaje się rozesłać odczytanych danych                                                                                                                                                                                                                                                                                 \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item System odczytuje dane dotyczące zużycia zasobów przez dom z odpowiednich liczników
+
+\item Dane zostają zapisane na serwerze aplikacji
+
+\item Odczytane dane przesyłane są do zewnętrznych firm, czynność ta wykonywana jest automatycznie co określoną (w ustawieniach) ilość czasu\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item AD. 3: Adres firmy do której aplikacja ma dostarczyć dane jest nieprawidłowy, użytkownik otrzymuje stosowne powiadomienie, a dane nie zostają wysłane.\end{itemize}                                                                                                                                  \\
+						\hline
+					\end{tabular}
+				\end{table}
+		\end{enumerate}
+
+		\subsubsection{Urządzenia, usprawnienia, marketplace}
+		\begin{enumerate}
+			\item \textbf{Wyświetlenie marketplace z dodatkowymi wtyczkami społeności}
+				- pojawia się aktualna strona marketplace z odertami wtyczek opartymi o
+				sugestie (dostępne urządzenia IoT oraz historię wyszukiwania)
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Wyświetlenie marketplace z dodatkowymi wtyczkami społeczności}                                                                                      \\
+						\hline
+						Opis                    & Pojawienie się aktualnej strony marketplace z ofertami wtyczek opartymi na sugestiach, uwzględniających dostępne urządzenia IoT oraz historię wyszukiwania. \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                  \\
+						\hline
+						Warunki początkowe      & Użytkownik otwiera aplikację marketplace.                                                                                                                   \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownik widzi stronę marketplace z wtyczkami społeczności.                                                                                               \\
+						\hline
+						Warunki końcowe porażki & Użytkownik nie widzi strony marketplace z wtyczkami społeczności.                                                                                           \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik otwiera aplikację marketplace.
+
+\item System wyświetla stronę marketplace z wtyczkami społeczności.\end{enumerate}        \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Użytkownik nie ma dostępu do internetu.
+
+\item System wyświetla komunikat o braku połączenia z internetem.\end{enumerate}            \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Instalacja wtyczki} - wtyczka zostaje aktywowana, jej funkcje
+				stają się dostępne
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Instalacja wtyczki}                                                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Opis                    & Aktywacja wtyczki, co umożliwia dostęp do jej funkcji.                                                                                                                                                                                                                                                                                        \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                    \\
+						\hline
+						Warunki początkowe      & Użytkownik przegląda marketplace i wybiera wtyczkę.                                                                                                                                                                                                                                                                                           \\
+						\hline
+						Warunki końcowe sukcesu & Wtyczka została zainstalowana i udostępnia swoje funkcje.                                                                                                                                                                                                                                                                                     \\
+						\hline
+						Warunki końcowe porażki & Wtyczka nie została zainstalowana.                                                                                                                                                                                                                                                                                                            \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik przegląda marketplace i wybiera wtyczkę.
+
+\item Użytkownik wybiera opcję instalacji wtyczki.
+
+\item System instaluje wtyczkę i udostępnia jej funkcje.\end{enumerate}                                                                                                                                       \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Następuje błąd instalacji.
+
+\item System co jakiś czas automatycznie ponawia próby instalacji aż do skutku.
+
+\item W przypadku bardzo wielu nieudanych prób oraz poprawnego połączenia z internetem, użytkownik zostaje powiadomiony o niedostępności wtyczki ze względów problemów po stronie serwera.\end{enumerate} \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Realizacja płatności za wybrane wtyczki użytkowników
+				społeczności} - wykonanie płatności, w celu zdobycia możliwości używania
+				wtyczki
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Realizacja płatności za wybrane wtyczki użytkowników społeczności}                                                                                                                        \\
+						\hline
+						Opis                    & Wykonanie płatności w celu uzyskania możliwości korzystania z wtyczki.                                                                                                                            \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                        \\
+						\hline
+						Warunki początkowe      & Użytkownik wybiera wtyczkę do zakupu.                                                                                                                                                             \\
+						\hline
+						Warunki końcowe sukcesu & Wtyczka została aktywowana.                                                                                                                                                                       \\
+						\hline
+						Warunki końcowe porażki & Wtyczka nie została aktywowana.                                                                                                                                                                   \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wybiera wtyczkę do zakupu.
+
+\item Użytkownik podaje dane płatnicze i akceptuje transakcję.
+
+\item System przetwarza płatność i aktywuje wtyczkę.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Następuje błąd płatności i transakcja zostaje anulowana.
+
+\item Użytkownik zostanie powiadomiony o problemie z środkiem płatniczym.\end{enumerate}                         \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Dodanie własnej wtyczki na marketplace} - na marketplace
+				pojawia się możliwość zakupu licencji użytkowania wtyczki
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Dodanie własnej wtyczki na marketplace}                                                                                                                                                                              \\
+						\hline
+						Opis                    & Pojawienie się możliwości zakupu licencji użytkowania nowej wtyczki na marketplace.                                                                                                                                          \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Twórca wtyczki\end{itemize}                                                                                                                                                                             \\
+						\hline
+						Warunki początkowe      & Twórca wtyczki dodaje ją do marketplace.                                                                                                                                                                                     \\
+						\hline
+						Warunki końcowe sukcesu & Użytkownicy mogą przeglądać i zakupić licencję na wtyczkę.                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe porażki & Użytkownicy nie mogą przeglądać i zakupić licencji na wtyczkę.                                                                                                                                                               \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Twórca wtyczki dodaje ją do marketplace.
+
+\item Użytkownicy mogą przeglądać i zakupić licencję na wtyczkę.\end{enumerate}                                                                             \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Opis wtyczki lub jej kod nie spełniają wymagań.
+
+\item System odmawia twórcy wtyczki dodania jej do marketplace.
+
+\item Użytkownicy nie mogą przeglądać i zakupić licencji na wtyczkę.\end{enumerate} \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Usunięcie wtyczki} - wtyczka zostaje zdezaktywowana, jej funkcje
+				przestają być dostępne
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Usunięcie wtyczki}                                                                                                                                                                     \\
+						\hline
+						Opis                    & Dezaktywacja wtyczki, co powoduje zatrzymanie dostępu do jej funkcji.                                                                                                                          \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                     \\
+						\hline
+						Warunki początkowe      & Użytkownik wybiera wtyczkę do usunięcia.                                                                                                                                                       \\
+						\hline
+						Warunki końcowe sukcesu & Wtyczka została zdezaktywowana.                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Brak. Wtyczka zawsze zostanie usunięta.                                                                                                                                                        \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wybiera wtyczkę do usunięcia.
+
+\item Użytkownik wybiera opcję usunięcia wtyczki.
+
+\item System przerywa działanie wtyczki i ją odinstalowuje.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & -                                                                                                                                                                                              \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Dodanie konta innego członka rodziny domu} - przypisaie
+				członka do domu, uzyskuje podstawowe permisje, jak np. wstęp do domu
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Dodanie konta innego członka rodziny domu}                                                                                                                                                                                                                \\
+						\hline
+						Opis                    & Przypisanie członka do domu, nadając mu podstawowe uprawnienia, np. dostęp do domu.                                                                                                                                                                               \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel domu
+
+\item Członek rodziny\end{itemize}                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Właściciel domu otwiera panel administracyjny.                                                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Nowy członek otrzymuje zaproszenie i akceptuje je.                                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Nowy członek nie zostaje dodany do domu.                                                                                                                                                                                                                          \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Właściciel domu otwiera panel administracyjny.
+
+\item Właściciel dodaje nowego członka rodziny.
+
+\item Nowy członek otrzymuje zaproszenie i akceptuje je.
+
+\item System przypisuje nowemu członkowi podstawowe uprawnienia.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Nowy członek odrzuca zaproszenie.\end{enumerate}                                                                                                                                                                                           \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Przypisanie urządzeń członkom wirtualnego domu} -
+				przypisanie uprawnień do danego członka domu przez właściciela
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Przypisanie urządzeń członkom wirtualnego domu}                                                                                                                                                                 \\
+						\hline
+						Opis                    & Przypisanie uprawnień do urządzeń konkretnemu członkowi domu przez właściciela.                                                                                                                                         \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel domu
+
+\item Członek rodziny\end{itemize}                                                                                                                                                \\
+						\hline
+						Warunki początkowe      & Właściciel domu otwiera panel administracyjny.                                                                                                                                                                          \\
+						\hline
+						Warunki końcowe sukcesu & Właściciel wybiera członka domu i nadaje mu uprawnienia do urządzenia.                                                                                                                                                  \\
+						\hline
+						Warunki końcowe porażki & Właściciel nie nadaje uprawnień do urządzenia.                                                                                                                                                                          \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Właściciel domu otwiera panel administracyjny.
+
+\item Właściciel wybiera urządzenie do przypisania.
+
+\item Właściciel wybiera członka domu i nadaje mu uprawnienia do urządzenia.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item Właściciel przerywa edycję uprawnień.\end{enumerate}                                                                                                                                             \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Konfiguracja uprawnień dla członka rodziny} - nadanie lub
+				odebranie uprawnień członkowi domu przez właściciela
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Konfiguracja uprawnień dla członka rodziny}                                                                                                                                               \\
+						\hline
+						Opis                    & Nadanie lub odebranie uprawnień dla konkretnego członka domu przez właściciela.                                                                                                                   \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel domu
+
+\item Członek rodziny\end{itemize}                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Właściciel domu otwiera panel administracyjny.                                                                                                                                                    \\
+						\hline
+						Warunki końcowe sukcesu & Właściciel modyfikuje uprawnienia przypisane do członka domu.                                                                                                                                     \\
+						\hline
+						Warunki końcowe porażki & Właściciel nie modyfikuje uprawnień przypisanych do członka domu.                                                                                                                                 \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Właściciel domu otwiera panel administracyjny.
+
+\item Właściciel wybiera członka domu.
+
+\item Właściciel modyfikuje uprawnienia przypisane do członka domu.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Właściciel przerywa edycję uprawnień.\end{itemize}                                                                                                                           \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Dodanie smart urządzeń do domu} - dodanie nowego urządzenia
+				do domu, w celu konfiguracji i użytkowania
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & \textbf{Dodanie smart urządzeń do domu}                                                                                                                                                                                                                     \\
+						\hline
+						Opis                    & Dodanie nowego urządzenia do domu w celu konfiguracji i użytkowania.                                                                                                                                                                                        \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Członek wirtualnego domu\end{itemize}                                                                                                                                                                                                  \\
+						\hline
+						Warunki początkowe      & Użytkownik otwiera panel dodawania urządzeń.                                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe sukcesu & System dodaje urządzenie do listy zainstalowanych.                                                                                                                                                                                                          \\
+						\hline
+						Warunki końcowe porażki & System nie dodaje urządzenia do listy zainstalowanych.                                                                                                                                                                                                      \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik otwiera panel dodawania urządzeń.
+
+\item Użytkownik wybiera rodzaj urządzenia do dodania.
+
+\item Użytkownik podłącza nowe urządzenie do systemu.
+
+\item System dodaje urządzenie do listy zainstalowanych.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{enumerate}\item System z różnych przyczyn nie potrafi skomunikować się z urządzeniem
+
+\item System wyświetla komunikat o błędzie.\end{enumerate}                                                                                                     \\
+						\hline
+					\end{tabular}
+				\end{table}
+		\end{enumerate}
+
+		\subsubsection{Zarządzanie i bezpieczeństwo}
+
+		\begin{enumerate}
+			\item \textbf{Zarządzanie trybem awaryjnym} - włączenie lub wyłączenie
+				trybu, w którym wyłączane sa urządzenia i odcinane są media (gaz i prąd,
+				nie licząc oświetlenia)
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Zarządzanie trybem awaryjnym                                                                                                                                                                                                                                                 \\
+						\hline
+						Opis                    & Włączenie lub wyłączenie trybu, w którym wyłączane sa urządzenia i odcinane są media (gaz i prąd, nie licząc oświetlenia)                                                                                                                                                    \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                                \\
+						\hline
+						Warunki początkowe      & Dom posiada urządzenia wspierające tryb awaryjny                                                                                                                                                                                                                             \\
+						\hline
+						Warunki końcowe sukcesu & Zmieniono status trybu awaryjnego                                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zmienić status trybu awaryjnego                                                                                                                                                                                                                                \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item System wykrywa niebezpieczną sytuacje (pożar, wyciek gazu, zalanie domu lub spięcie elektryczne).
+
+\item System włącza tryb awaryjny.
+
+\item Kiedy użytkownik stwierdzi, że problem został rozwiązany manualnie wyłącza tryb awaryjny.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (i) Użytkownik rozpoznaje sam zagrożenie i manualnie wysyła zapytanie do serwera, aby włączył tryb awaryjny, następnie przejście do scenariusza głównego Ad (ii).\end{itemize}                                                                       \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zarządzanie trybem oszczędzania energii (wyjazdem na wakacje)}
+				- konfiguracja trybu oszczędzania energii (czasu nieużywania do wyłączenia
+				urządzenia, automatycznego wyłączania świateł, jeśli zrobi się widno na zewnątrz)
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Zarządzanie trybem oszczędzania energii (wyjazdem na wakacje)                                                                                                                                                                                                          \\
+						\hline
+						Opis                    & Konfiguracja trybu oszczędzania energii (czasu nieużywania do wyłączenia urządzenia, automatycznego wyłączania świateł, jeśli zrobi się widno na zewnątrz)                                                                                                             \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & Dom posiada urządzenia wspierające tryb oszczędzania energii                                                                                                                                                                                                           \\
+						\hline
+						Warunki końcowe sukcesu & Zmieniono status trybu oszczędzania energii                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zmienić statusu trybu oszczędzania energii                                                                                                                                                                                                               \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item System wykrywa, że przez ostatnie 15 minut nikt nie znajdował się w wirtualnym domu.
+
+\item System włącza tryb oszczędzania energii.
+
+\item Kiedy domownik wróci do domu system automatycznie wyłącza tryb oszczędzania energii.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (iii) Użytkownik sam wyłącza tryb oszczędzenia energii mimo to, że jest poza domem.\end{itemize}                                                                                                                                               \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Zarządzanie trybem SafePet\textsuperscript{TM} (utrzymanie zwierząt
+				pod naszą nieobecność)} - konfiguracja szczegółów dotyczących utrzymania
+				zwierzątk (podawanie karmy i wody, czyszczenie kuwety, kontrola temperatury
+				pomieszczeń)
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Zarządzanie trybem SafePet\textsuperscript{TM} (utrzymanie zwierząt pod naszą nieobecność)                                                                                                                                                                                                                                                        \\
+						\hline
+						Opis                    & Konfiguracja szczegółów dotyczących utrzymania zwierzątk (podawanie karmy i wody, czyszczenie kuwety, kontrola temperatury pomieszczeń)                                                                                                                                                                                                           \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                                     \\
+						\hline
+						Warunki początkowe      & Dom posiada urządzenia wspierające tryb SafePet\textsuperscript{TM} oraz w domu znajdują się zwierzęta                                                                                                                                                                                                                                            \\
+						\hline
+						Warunki końcowe sukcesu & Zmieniono status trybu SafePet\textsuperscript{TM}                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zmienić statusu trybu SafePet\textsuperscript{TM}                                                                                                                                                                                                                                                                                   \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item System wykrywa, że przez ostatnie 15 minut nikt nie znajdował się w wirtualnym domu.
+
+\item System włącza tryb SafePet\textsuperscript{TM}.
+
+\item Kiedy domownik wróci do domu system automatycznie wyłącza tryb SafePet\textsuperscript{TM}.\end{enumerate}                                                              \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Użytkownik wysyła zapytanie do serwera, aby serwer włączył tryb SafePet\textsuperscript{TM}.
+
+\item Serwer włącza tryb SafePet\textsuperscript{TM}
+
+\item Użytkownik wysyła zapytanie do serwera, aby serwer wyłączył tryb SafePet\textsuperscript{TM}.
+
+\item Serwer wyłącza tryb SafePet\textsuperscript{TM}.\end{itemize} \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+			\item \textbf{Włączenie trybu alarmowego} - wzywa służby, trwale zapisuje nagrania
+				z kamer (nie będą usunięte automatycznie po 30 dniach)
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Włączenie trybu alarmowego                                                                                                                                                                                                       \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                    \\
+						\hline
+						Warunki początkowe      & W domu dochodzi do włamania                                                                                                                                                                                                      \\
+						\hline
+						Warunki końcowe sukcesu & Zmieniono status trybu alarmowego                                                                                                                                                                                                \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zmienić statusu trybu alarmowego                                                                                                                                                                                   \\
+						\hline
+						Opis                    & Wzywa służby, trwale zapisuje nagrania z kamer (nie będą usunięte automatycznie po 30 dniach)                                                                                                                                    \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item System wykrywa próbę włamania
+
+\item System włącza tryb alarmowy.
+
+\item Kiedy użytkownik stwierdzi, że nie ma zagrożenia, wysyła zapytanie do serwera, aby serwer wyłączył tryb alarmowy.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & \begin{itemize}\item Ad (i) Użytkownik wysyła zapytanie, aby system włączył tryb alarmowy
+
+\item Przejście do scenariusza głównego Ad (ii).\end{itemize}                                                                         \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=0.41\paperwidth]{
+						Diagram czynności - Włączenie trybu alarmowego.png
+					}
+				\end{figure}
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Utworzenie tymczasowego kodu dostępu dla gości                                                                                                                                                                                                                                      \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                                       \\
+						\hline
+						Warunki początkowe      & Właściciel domu chce wpuścić do domu gościa pod swoją nieobecność                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe sukcesu & Udało się wygenerować kod gościa                                                                                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe porażki & Nie udało się wygenerować kodu gościa                                                                                                                                                                                                                                               \\
+						\hline
+						Opis                    & utworzenie kodu, który pozwalałby użytkownikowi zalogowanemu na dostęp do domu i urządzeń, w zakresie określonym przez właściciela domu                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Właściciel domu wysyła zapytanie do serwera, aby serwer wygenerował kod.
+
+\item System generuje kod.
+
+\item Właściciel udostępnia kod gościowi.
+
+\item Gość wpisuje kod w aplikacji.
+
+\item Serwer przyznaje gościowi tymczasowe uprawnienia.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & Brak                                                                                                                                                                                                                                                                                \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Aktywacja trybu 'poza domem' w celu zwiększenia zabezpieczeń                                                                                                                                                                                                                           \\
+						\hline
+						Opis                    & w tym trybie alarm informuje od razu odpowiednie służby, zaplanowane w harmonogramie wydarzenia nie mają miejsca (nie podnoszą się rolety, nie zaświecają się światła) oraz urządzenia przechodzą z trybu czuwania w stan wyłączenia.                                                  \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                                          \\
+						\hline
+						Warunki początkowe      & W domu nikogo nie ma                                                                                                                                                                                                                                                                   \\
+						\hline
+						Warunki końcowe sukcesu & Zmieniono status trybu 'poza domem'                                                                                                                                                                                                                                                    \\
+						\hline
+						Warunki końcowe porażki & Nie udało się zmienić statusu 'poza domem'                                                                                                                                                                                                                                             \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wysyła zapytanie do serwera, aby serwer włączył tryb 'Poza domem'
+
+\item Serwer włącza tryb 'poza domem'
+
+\item Użytkownik wysyła zapytanie do serwera, aby serwer wyłączył tryb 'Poza domem'
+
+\item Serwer wyłącza tryb 'poza domem'\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & Jeżeli tryb 'poza domem' jest włączony i ktoś wszedł do domu serwer automatycznie wyłącza tryb 'poza domem'.                                                                                                                                                                           \\
+						\hline
+					\end{tabular}
+				\end{table}
+
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|c|p{7cm}|}
+						\hline
+						Nazwa                   & Edycja stanu zabezpieczeń domu                                                                                                                                                                                                                                                                                                \\
+						\hline
+						Opis                    & Możliwość konfiguracji trybu domyslnego, trybu 'poza domem' oraz aktualnego stanu zabezpieczeń.                                                                                                                                                                                                                               \\
+						\hline
+						Aktorzy                 & \begin{itemize}\item Właściciel wirtualnego domu\end{itemize}                                                                                                                                                                                                                                                                 \\
+						\hline
+						Warunki początkowe      & Właściciel domu ma zamiar zmienić ustawienia                                                                                                                                                                                                                                                                                  \\
+						\hline
+						Warunki końcowe sukcesu & Wyświetlono i/lub zmieniono ustawienia.                                                                                                                                                                                                                                                                                       \\
+						\hline
+						Warunki końcowe porażki & Nie udało się wyświetlić lub zmienić ustawień.                                                                                                                                                                                                                                                                                \\
+						\hline
+						Scenariusz główny       & \begin{enumerate}\item Użytkownik wysyła zapytanie do serwera, aby wyświetlił obecne ustawienia.
+
+\item Serwer wysyła użytkownikowi informacje o obecnych ustawieniach.
+
+\item Użytkownik wysyła zapytanie do serwera, aby zmienić część ustawień.
+
+\item Serwer zmienia wybrane przez użytkownika ustawienia.\end{enumerate} \\
+						\hline
+						Scenariusz alternatywny & Brak                                                                                                                                                                                                                                                                                                                          \\
+						\hline
+					\end{tabular}
+				\end{table}
+		\end{enumerate}
+	\end{enumerate}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.48\paperwidth]{
+			Diagram czynności - Edycja stanu zabezpieczeń domu.png
+		}
+	\end{figure}
+
+	\newpage
+
+	\section{Diagramy przypadków użycia}
+
+	\subsection{Logowanie i podstawowe opcje}
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Logowanie i podstawowe opcje.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Logowanie i podstawowe opcje}
+	\end{figure}
+
+	\newpage
+	\subsection{Harmonogram, kontakty, powiadomienia}
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Harmonogram,
+			kontakty,
+			powiadomienia.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Harmonogram, kontakty, powiadomienia}
+	\end{figure}
+
+	\newpage
+	\subsection{Wykorzystanie urządzeń IoT}
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Wykorzystanie urządzeń IoT.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Wykorzystanie urządzeń IoT}
+	\end{figure}
+
+	\newpage
+	\subsection{Automatyzacja i statystyki}
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Automatyzacja i statystyki.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Automatyzacja i statystyki}
+	\end{figure}
+
+	\newpage
+	\subsection{Urządzenia, uprawnienia, marketplace}
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Urządzenia,
+			uprawnienia,
+			marketplace.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Urządzenia, uprawnienia, marketplace}
+	\end{figure}
+
+	\newpage
+	\subsection{Zarządzanie i bezpieczeństwo}
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Zarządzanie i bezpieczeństwo.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Zarządzanie i bezpieczeństwo}
+	\end{figure}
+
+	\newpage
+
+	\section{Diagramy Sekwencji}
+
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{Kontakty.png}}
+		\captionsetup{labelformat=empty}
+		\caption{Konfiguracja listy kontaków do powiadamiania w razie nagłych
+		sytuacji}
+	\end{figure}
+
+	\begin{figure}[H]
+		\centering
+		\noindent
+		\makebox[\textwidth]{\includegraphics[width=0.8\paperwidth]{
+			Powiadomienia.png
+		}}
+		\captionsetup{labelformat=empty}
+		\caption{Wyciszanie powiadomień na określony czas}
+	\end{figure}
+
+	\newpage
+	\section{Podział pracy}
+
+	\begin{itemize}
+		\item Wprowadzenie: \\ Rafał Żelazko \\ Artur Wojciechowski \\ Bartosz
+			Sendor \\ Patryk Skowron \\ Bartosz Warchoł \\
+
+		\item Aktorzy:\\ Rafał Żelazko \\ Bartosz Sendor \\ Patryk Skowron \\ Artur Wojciechowski
+			\\
+
+		\item Przypadki użycia:\\ Artur Wojciechowski \\ Bartosz Sendor \\ Patryk Skowron
+			\\ Rafał Żelazko \\
+
+		\item Diagramy przypadków użycia: Bartosz Warchoł
+
+		\item Scenariusze przypadków użycia
+
+			\begin{enumerate}
+				\item Logowanie i podstawowe opcje: Rafał Żelazko
+
+				\item Harmonogram, kontakty, powiadomienia: Bartosz Warchoł
+
+				\item Wykorzystanie urzadzeń IoT: Bartosz Sendor
+
+				\item Automatyzacja i statystyki: Artur Wojciechowski
+
+				\item Urządzenia, usprawnienia, marketplace: Rafał Żelazko
+
+				\item Zarządzanie i bezpieczeństwo: Patryk Skowron
+			\end{enumerate}
+	\end{itemize}
+\end{document}
