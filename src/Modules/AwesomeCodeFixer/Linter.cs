@@ -5,11 +5,11 @@ namespace AwesomeCodeFixer;
 public static class Linter
 {
     /// <summary>
-    /// Method creates a file with content and returns ?List of? linting warnings and errors. 
+    /// Method creates a file with content and returns string with linting warnings and errors. 
     /// </summary>
     /// <param name="content">Component content</param>
     /// <param name="componentType">Type of component</param>
-    /// <returns>?List of? linting warnings and errors</returns>
+    /// <returns>String with linting warnings and errors</returns>
     public static string Lint(string content, ComponentType componentType)
     {
         string output = "";
