@@ -10,7 +10,7 @@ Dalszy y=tekst 123.
 
 [Kliknij](https://gars.pl)
 
-```py
+```Cpp
 # code here
 ```
 
@@ -24,7 +24,7 @@ $$
 <Note title="Tytul artykulu">
 tekst artykulu tekst artykulutekst artykulu
 tekst artykulu
-```py
+```Python
 print("Hello world!")
 ```
 tekst artykulu
