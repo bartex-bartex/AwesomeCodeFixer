@@ -9,7 +9,7 @@
 1. Install linting tools in root directory
    
 ```
-npm install eslint --save-dev
+npm install --save-dev eslint@8.57.0
 npm install eslint-plugin-markdownlint --save-dev
 npm install eslint @babel/core @babel/eslint-parser --save-dev
 ```
