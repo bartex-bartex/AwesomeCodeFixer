@@ -36,3 +36,17 @@ npm install --save-dev prettier-plugin-sql
 pip install black
 pip install clang-format
 ```
+
+### Running linters:
+npx eslint --stdin --stdin-filename=foo.md
+chktex
+clang-format --dry-run --Werror --assume-filename=.c
+clang-format --dry-run --Werror --assume-filename=.cpp
+sqlfluff lint - --dialect ansi
+flake8 -
+
+
+### Running formatters:
+prettier --stdin-filepath foo.xxx
+black -
+clang-format --assume-filename=<string> 
