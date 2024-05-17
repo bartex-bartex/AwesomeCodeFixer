@@ -1,4 +1,4 @@
-namespace AwesomeCodeFixer;
+namespace AwesomeCodeFixerUI;
 
 public enum ComponentType
 {

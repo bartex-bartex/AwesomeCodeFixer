@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 
-namespace AwesomeCodeFixer;
+namespace AwesomeCodeFixerUI;
 
 public static class GlobalConfig
 {
