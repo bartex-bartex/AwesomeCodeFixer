@@ -7,7 +7,7 @@ internal class Program
     static void Main(string[] args)
     {
         // string path = @"example_input.txt";
-        string path = @"C:..\..\test_files\example_input.txt";
+        string path = @"..\..\test\test_files\example_input.txt";
 
         // tu jest lista, której każdy element jest listą i składa się z:
         // [0] - numer linii w pliku, w którym zaczyna się dany komponent

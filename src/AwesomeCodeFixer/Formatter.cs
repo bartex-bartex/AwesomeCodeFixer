@@ -66,7 +66,7 @@ public static class Formatter
         }
 
         // TODO - Figure out why 8 and 2, should be 4 and 1.
-        output = Helper.TrimLines(output, 8, 2);
+        //output = Helper.TrimLines(output, 8, 2);
 
         return output;
     }
