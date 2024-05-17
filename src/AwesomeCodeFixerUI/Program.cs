@@ -7,7 +7,6 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        // string path = @"example_input.txt";
         string path = @"..\..\test\test_files\example_input.txt";
 
         // tu jest lista, której każdy element jest listą i składa się z:

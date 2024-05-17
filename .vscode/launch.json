@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Modules/AwesomeCodeFixer/bin/Debug/net7.0/AwesomeCodeFixer.dll",
+            "program": "${workspaceFolder}/src/AwesomeCodeFixerUI/bin/Debug/net8.0/AwesomeCodeFixerUI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Modules/AwesomeCodeFixer",
+            "cwd": "${workspaceFolder}/src/AwesomeCodeFixerUI",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
