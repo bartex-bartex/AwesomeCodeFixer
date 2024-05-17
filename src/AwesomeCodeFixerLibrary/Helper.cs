@@ -1,4 +1,4 @@
-namespace AwesomeCodeFixerUI
+namespace AwesomeCodeFixerLibrary
 {
     public static class Helper
     {

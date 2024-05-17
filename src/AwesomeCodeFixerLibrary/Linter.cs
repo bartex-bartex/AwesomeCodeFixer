@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AwesomeCodeFixerUI;
+namespace AwesomeCodeFixerLibrary;
 
 public static class Linter
 {

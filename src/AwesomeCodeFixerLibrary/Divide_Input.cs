@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace AwesomeCodeFixerUI
+namespace AwesomeCodeFixerLibrary
 {
     public class Divide_Input
     {

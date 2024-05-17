@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AwesomeCodeFixerLibrary;
+using System.Diagnostics;
 
 namespace AwesomeCodeFixerUI;
 
