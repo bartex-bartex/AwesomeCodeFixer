@@ -10,7 +10,7 @@ public static class Formatter
     /// <param name="content">Component content</param>
     /// <param name="componentType">Type of component</param>
     /// <returns>String with formatted content</returns>
-    public static string Format(string content, ComponentType componentType)
+    public static string Format(string content, ComponentType componentType, Language? language = null)
     {
         string output = "";
 
@@ -24,17 +24,32 @@ public static class Formatter
             case ComponentType.BlockLatex:
                 command = $"npx prettier --stdin-filepath foo.tex";
                 break;
-            case ComponentType.Sql:
-                command = $"npx prettier --stdin-filepath foo.sql";
+            case ComponentType.CodeBlock:
+                switch (language)
+                {
+                    case Language.cpp:
+                        command = $"clang-format --assume-filename=foo.cpp";
+                        break;
+                    case Language.c:
+                        command = $"clang-format --assume-filename=foo.c";
+                        break;
+                    case Language.python:
+                        command = $"black -";
+                        break;
+                    case Language.sql:
+                        command = $"npx prettier --stdin-filepath foo.sql";
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            case ComponentType.Cpp:
-                command = $"clang-format.exe --assume-filename=foo.cpp";
-                break;
-            case ComponentType.C:
-                command = $"clang-format.exe --assume-filename=foo.c";
-                break;
-            case ComponentType.Python:
-                command = $"black -";
+            // TODO - try HTML formatter
+            case ComponentType.YouTube:
+            case ComponentType.Info:
+            case ComponentType.Note:
+            case ComponentType.Warning:
+            case ComponentType.DeepDive:
+                command = "echo 'No formatting for this component'";
                 break;
             default:
                 break;

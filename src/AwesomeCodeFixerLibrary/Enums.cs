@@ -2,20 +2,23 @@ namespace AwesomeCodeFixerLibrary;
 
 public enum ComponentType
 {
+    Header,
     Markdown,
     InlineLatex,
     BlockLatex,
-    Cpp,
-    C,
-    Python,
-    Sql
+    CodeBlock,
+    YouTube,
+    Info,
+    Note,
+    Warning,
+    DeepDive
 }
 
 public enum Language
 {
-    Cpp,
-    C,
-    Python,
-    Sql,
-    Unspecified
+    cpp,
+    c,
+    python,
+    sql,
+    unspecified
 }

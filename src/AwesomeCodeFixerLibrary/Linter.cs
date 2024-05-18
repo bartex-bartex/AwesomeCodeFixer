@@ -10,7 +10,7 @@ public static class Linter
     /// <param name="content">Component content</param>
     /// <param name="componentType">Type of component</param>
     /// <returns>String with linting warnings and errors</returns>
-    public static string Lint(string content, ComponentType componentType)
+    public static string Lint(string content, ComponentType componentType, Language? language = null)
     {
         string output = "";
 
@@ -25,17 +25,32 @@ public static class Linter
             case ComponentType.BlockLatex:
                 command = $"chktex";
                 break;
-            case ComponentType.Cpp:
-                command = $"clang-format --dry-run --Werror --assume-filename=.cpp";
+            case ComponentType.CodeBlock:
+                switch (language)
+                {
+                    case Language.cpp:
+                        command = $"clang-format --dry-run --Werror --assume-filename=foo.cpp";
+                        break;
+                    case Language.c:
+                        command = $"clang-format --dry-run --Werror --assume-filename=foo.c";
+                        break;
+                    case Language.python:
+                        command = $"flake8 -";
+                        break;
+                    case Language.sql:
+                        command = $"sqlfluff lint - --dialect ansi";
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            case ComponentType.C:
-                command = $"clang-format --dry-run --Werror --assume-filename=.c";
-                break;
-            case ComponentType.Python:
-                command = $"flake8 -";
-                break;
-            case ComponentType.Sql:
-                command = $"sqlfluff lint - --dialect ansi";
+            // TODO - Try HTML linter
+            case ComponentType.YouTube:
+            case ComponentType.Info:
+            case ComponentType.Note:
+            case ComponentType.Warning:
+            case ComponentType.DeepDive:
+                command = "echo 'No linting for this component'";
                 break;
             default:
                 break;

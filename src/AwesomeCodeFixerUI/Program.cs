@@ -13,15 +13,11 @@ internal class Program
         stopwatch.Start();
 
         string content = File.ReadAllText(path);
-        var output = Extractor.ExtractComponents(ref content);
-
-        foreach (var item in output.Values)
-        {
-            Console.WriteLine(item);
-            Console.WriteLine("-------------------------------------------------");
-        }
+        string formattedContent = ExtensionManager.FormatCode(content);
 
         stopwatch.Stop();
         Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
+
+        System.Console.WriteLine(formattedContent);
     }
 }
