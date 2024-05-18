@@ -14,6 +14,14 @@ Dalszy y=tekst 123.
 # code here
 ```
 
+```Python
+print("Hello world!")
+```
+
+```SQL
+select * from db;
+```
+
 $ 1+2=5 $
 $$ 2*4/3=0
 1-3

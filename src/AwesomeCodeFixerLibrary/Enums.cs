@@ -10,3 +10,12 @@ public enum ComponentType
     Python,
     Sql
 }
+
+public enum Language
+{
+    Cpp,
+    C,
+    Python,
+    Sql,
+    Unspecified
+}

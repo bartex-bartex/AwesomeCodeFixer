@@ -43,28 +43,56 @@ public static class Linter
 
         using (Process linter = new Process())
         {
-            // UseShellExecute = false => ok, when FileName is an .exe 
-            linter.StartInfo.FileName = "ubuntu2204";
+            if (componentType == ComponentType.InlineLatex 
+                    || componentType == ComponentType.BlockLatex)
+            {
+                // UseShellExecute = false => ok, when FileName is an .exe 
+                linter.StartInfo.FileName = "ubuntu2204";
 
-            // /c => Carries out the command specified by string and then terminates
-            linter.StartInfo.RedirectStandardInput = true;
-            linter.StartInfo.RedirectStandardOutput = true;
-            // linter.StartInfo.RedirectStandardError = true; // For additional summarization
+                // /c => Carries out the command specified by string and then terminates
+                linter.StartInfo.RedirectStandardInput = true;
+                linter.StartInfo.RedirectStandardOutput = true;
+                // linter.StartInfo.RedirectStandardError = true; // For additional summarization
 
-            linter.StartInfo.UseShellExecute = false;
-            linter.StartInfo.CreateNoWindow = true;
-            linter.Start();
-            
-            linter.StandardInput.NewLine = "\n";
-            linter.StandardInput.WriteLine(command);
-            linter.StandardInput.WriteLine(content);
-            linter.StandardInput.WriteLine("^D");
-            linter.StandardInput.Close();
+                linter.StartInfo.UseShellExecute = false;
+                linter.StartInfo.CreateNoWindow = true;
+                linter.Start();
+                
+                linter.StandardInput.NewLine = "\n";
+                linter.StandardInput.WriteLine(command);
+                linter.StandardInput.WriteLine(content);
+                linter.StandardInput.WriteLine("^D"); // TODO - probably not needed
+                linter.StandardInput.Close();
 
-            // Waits until process terminates
-            output = linter.StandardOutput.ReadToEnd();
+                // Waits until process terminates
+                output = linter.StandardOutput.ReadToEnd();
 
-            linter.WaitForExit();
+                linter.WaitForExit();
+            }
+            else
+            {
+                // UseShellExecute = false => ok, when FileName is an .exe 
+                linter.StartInfo.FileName = "cmd";
+
+                // /c => Carries out the command specified by string and then terminates
+                linter.StartInfo.RedirectStandardInput = true;
+                linter.StartInfo.RedirectStandardOutput = true;
+                // linter.StartInfo.RedirectStandardError = true; // For additional summarization
+
+                linter.StartInfo.UseShellExecute = false;
+                linter.StartInfo.CreateNoWindow = true;
+                linter.Start();
+                
+                linter.StandardInput.WriteLine(command);
+                linter.StandardInput.WriteLine(content);
+                linter.StandardInput.WriteLine("^D"); // TODO - probably not needed
+                linter.StandardInput.Close();
+
+                // Waits until process terminates
+                output = linter.StandardOutput.ReadToEnd();
+
+                linter.WaitForExit();
+            }
         }
 
         return output;

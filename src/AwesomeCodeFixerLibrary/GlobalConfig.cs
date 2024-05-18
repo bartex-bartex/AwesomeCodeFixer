@@ -17,4 +17,15 @@ public static class GlobalConfig
             { ComponentType.Sql, ".sql" }
         }
     );
+
+    public static readonly ReadOnlyDictionary<string, Language> LanguageByString = new(
+        new Dictionary<string, Language>
+        {
+            {"cpp", Language.Cpp},
+            {"c", Language.C},
+            {"python", Language.Python},
+            {"sql", Language.Sql}
+        }
+    );
+
 }
