@@ -14,31 +14,37 @@ public static class Linter
     {
         string output = "";
 
-        string command = "";
+        string filename = "";
+        string arguments = "";
         switch (componentType)
         {
             case ComponentType.Markdown:
-                command = $"npx eslint --stdin --stdin-filename=foo.md";
+                filename = "npx";
+                arguments = $"eslint --stdin --stdin-filename=foo.md";
                 //command = @$"cat {filePath} | npx eslint --stdin --stdin-filename match_format.md"
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
-                command = $"chktex";
+                filename = $"chktex";
                 break;
             case ComponentType.CodeBlock:
                 switch (language)
                 {
                     case Language.cpp:
-                        command = $"clang-format --dry-run --Werror --assume-filename=foo.cpp";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                        arguments = $"--dry-run --Werror --assume-filename=foo.cpp";
                         break;
                     case Language.c:
-                        command = $"clang-format --dry-run --Werror --assume-filename=foo.c";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                        arguments = $"--dry-run --Werror --assume-filename=foo.c";
                         break;
                     case Language.python:
-                        command = $"flake8 -";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\flake8.exe";
+                        arguments = $"-";
                         break;
                     case Language.sql:
-                        command = $"sqlfluff lint - --dialect ansi";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\sqlfluff.exe";
+                        arguments = $"lint - --dialect ansi";
                         break;
                     default:
                         break;
@@ -50,7 +56,8 @@ public static class Linter
             case ComponentType.Note:
             case ComponentType.Warning:
             case ComponentType.DeepDive:
-                command = "echo 'No linting for this component'";
+                Debug.WriteLine("echo 'No Linting for this component'");
+                return "";
                 break;
             default:
                 break;
@@ -61,22 +68,19 @@ public static class Linter
             if (componentType == ComponentType.InlineLatex 
                     || componentType == ComponentType.BlockLatex)
             {
-                // UseShellExecute = false => ok, when FileName is an .exe 
                 linter.StartInfo.FileName = "ubuntu2204";
 
-                // /c => Carries out the command specified by string and then terminates
                 linter.StartInfo.RedirectStandardInput = true;
                 linter.StartInfo.RedirectStandardOutput = true;
-                // linter.StartInfo.RedirectStandardError = true; // For additional summarization
+                linter.StartInfo.RedirectStandardError = true; // For additional summarization
 
                 linter.StartInfo.UseShellExecute = false;
                 linter.StartInfo.CreateNoWindow = true;
                 linter.Start();
                 
                 linter.StandardInput.NewLine = "\n";
-                linter.StandardInput.WriteLine(command);
+                linter.StandardInput.WriteLine($"{filename}");
                 linter.StandardInput.WriteLine(content);
-                linter.StandardInput.WriteLine("^D"); // TODO - probably not needed
                 linter.StandardInput.Close();
 
                 // Waits until process terminates
@@ -86,21 +90,20 @@ public static class Linter
             }
             else
             {
-                // UseShellExecute = false => ok, when FileName is an .exe 
-                linter.StartInfo.FileName = "cmd";
+                linter.StartInfo.FileName = filename;
+                linter.StartInfo.Arguments = arguments;
 
-                // /c => Carries out the command specified by string and then terminates
                 linter.StartInfo.RedirectStandardInput = true;
                 linter.StartInfo.RedirectStandardOutput = true;
-                // linter.StartInfo.RedirectStandardError = true; // For additional summarization
+                linter.StartInfo.RedirectStandardError = true; // For additional summarization
 
                 linter.StartInfo.UseShellExecute = false;
                 linter.StartInfo.CreateNoWindow = true;
                 linter.Start();
                 
-                linter.StandardInput.WriteLine(command);
+                linter.StandardInput.NewLine = Environment.NewLine;
+                //linter.StandardInput.WriteLine(command);
                 linter.StandardInput.WriteLine(content);
-                linter.StandardInput.WriteLine("^D"); // TODO - probably not needed
                 linter.StandardInput.Close();
 
                 // Waits until process terminates

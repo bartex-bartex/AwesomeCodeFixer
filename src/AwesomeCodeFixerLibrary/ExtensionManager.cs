@@ -11,6 +11,29 @@ namespace AwesomeCodeFixerLibrary
 {
     public static class ExtensionManager
     {
+        public static string LintCode(string content)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var components = Decompose(ref content);
+
+            foreach (var component in components.Values)
+            {
+                if (component.ComponentType == ComponentType.CodeBlock)
+                {
+                    string lintOutput = Linter.Lint(ExtractCodeFromCodeBlock(component.Content), component.ComponentType, component.Language);
+                    sb.Append(lintOutput);
+                }
+                else
+                {
+                    string lintOutput = Linter.Lint(component.Content, component.ComponentType, component.Language);
+                    sb.Append(lintOutput);
+                }
+            }
+
+            return sb.ToString();
+        }
+
         public static string FormatCode(string content)
         {
             var components = Decompose(ref content);
