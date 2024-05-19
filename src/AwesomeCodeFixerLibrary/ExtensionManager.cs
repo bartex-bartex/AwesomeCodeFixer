@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace AwesomeCodeFixerLibrary
 {
@@ -13,6 +14,8 @@ namespace AwesomeCodeFixerLibrary
         public static string FormatCode(string content)
         {
             var components = Decompose(ref content);
+
+            content = Formatter.Format(content, ComponentType.Markdown);
 
             foreach (var component in components.Values)
             {
@@ -35,7 +38,7 @@ namespace AwesomeCodeFixerLibrary
 
         private static string Compose(string content, Dictionary<string, ComponentModel> componentsByTokens)
         {
-            foreach (var entry in componentsByTokens)
+            foreach (var entry in componentsByTokens.Reverse())
             {
                 content = content.Replace(entry.Key, entry.Value.Content);
             }

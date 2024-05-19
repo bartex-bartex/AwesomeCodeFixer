@@ -1,11 +1,11 @@
 <Header To jest tytul./>
-<Header To jest tytul.
+	<Header To jest tytul.
 dalsza część
 />
 
 jakis tekst
-Dalszy y=tekst 123.
-*hejka lubie*
+	Dalszy    y=tekst 123.
+*hejka lubie *
 **hejka lubie**
 
 [Kliknij](https://gars.pl)
@@ -71,4 +71,3 @@ blb
 
 hh
 </DeepDive>
-

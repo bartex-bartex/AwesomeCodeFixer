@@ -14,30 +14,37 @@ public static class Formatter
     {
         string output = "";
 
-        string command = "";
+        string filename = "";
+        string arguments = "";
         switch (componentType)
         {
             case ComponentType.Markdown:
-                command = $"npx prettier --stdin-filepath foo.md";
+                filename = @"C:\Program Files\nodejs\npx.cmd";
+                arguments = $"prettier --stdin-filepath foo.md";
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
-                command = $"npx prettier --stdin-filepath foo.tex";
+                filename = @"C:\Program Files\nodejs\npx.cmd";
+                arguments = $"prettier --stdin-filepath foo.tex";
                 break;
             case ComponentType.CodeBlock:
                 switch (language)
                 {
                     case Language.cpp:
-                        command = $"clang-format --assume-filename=foo.cpp";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                        arguments = $"--assume-filename=foo.cpp";
                         break;
                     case Language.c:
-                        command = $"clang-format --assume-filename=foo.c";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                        arguments = $"--assume-filename=foo.c";
                         break;
                     case Language.python:
-                        command = $"black -";
+                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\black.exe";
+                        arguments = $"-";
                         break;
                     case Language.sql:
-                        command = $"npx prettier --stdin-filepath foo.sql";
+                        filename = @"C:\Program Files\nodejs\npx.cmd";
+                        arguments = $"prettier --stdin-filepath foo.sql";
                         break;
                     default:
                         break;
@@ -49,7 +56,8 @@ public static class Formatter
             case ComponentType.Note:
             case ComponentType.Warning:
             case ComponentType.DeepDive:
-                command = "echo 'No formatting for this component'";
+                Debug.WriteLine("echo 'No formatting for this component'");
+                return content;
                 break;
             default:
                 break;
@@ -57,20 +65,19 @@ public static class Formatter
 
         using (Process formatter = new Process())
         {
-            // UseShellExecute = false => ok, when FileName is an .exe 
-            formatter.StartInfo.FileName = "cmd";
+            formatter.StartInfo.FileName = filename;
+            formatter.StartInfo.Arguments = arguments;
 
-            // /c => Carries out the command specified by string and then terminates
             formatter.StartInfo.RedirectStandardInput = true;
             formatter.StartInfo.RedirectStandardOutput = true;
             formatter.StartInfo.RedirectStandardError = true; // For additional summarization
 
-            formatter.StartInfo.UseShellExecute = false;
+            formatter.StartInfo.UseShellExecute = false; // If false => you must specify a full path to .exe
             formatter.StartInfo.CreateNoWindow = true;
             formatter.Start();
             
             formatter.StandardInput.NewLine = Environment.NewLine;
-            formatter.StandardInput.WriteLine(command);
+            //formatter.StandardInput.WriteLine(command);
             formatter.StandardInput.WriteLine(content);
             formatter.StandardInput.Close();
 
@@ -79,9 +86,6 @@ public static class Formatter
 
             formatter.WaitForExit();
         }
-
-        // TODO - Figure out why 8 and 2, should be 4 and 1.
-        //output = Helper.TrimLines(output, 8, 2);
 
         return output;
     }
