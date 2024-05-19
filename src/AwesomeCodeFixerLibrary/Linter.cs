@@ -19,9 +19,8 @@ public static class Linter
         switch (componentType)
         {
             case ComponentType.Markdown:
-                filename = "npx";
+                filename = @"C:\Program Files\nodejs\npx.cmd";
                 arguments = $"eslint --stdin --stdin-filename=foo.md";
-                //command = @$"cat {filePath} | npx eslint --stdin --stdin-filename match_format.md"
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:

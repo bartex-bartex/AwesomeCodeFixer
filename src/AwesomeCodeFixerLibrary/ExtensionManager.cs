@@ -17,6 +17,8 @@ namespace AwesomeCodeFixerLibrary
 
             var components = Decompose(ref content);
 
+            sb.Append(Linter.Lint(content, ComponentType.Markdown));
+
             foreach (var component in components.Values)
             {
                 if (component.ComponentType == ComponentType.CodeBlock)
