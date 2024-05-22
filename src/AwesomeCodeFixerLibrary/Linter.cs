@@ -11,8 +11,7 @@ public static class Linter
     /// <param name="content">Component content</param>
     /// <param name="componentType">Type of component</param>
     /// <returns>String with linting warnings and errors</returns>
-    public static string Lint(string content, ComponentType componentType, 
-            Language? language = null, Point componentPosition = default(Point))
+    public static string Lint(string content, ComponentType componentType, Point componentPosition = default(Point))
     {
         string output = "";
 
@@ -26,30 +25,23 @@ public static class Linter
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
-                filename = $"chktex";
+                filename = @$"chktex -f '%l %c %m \n' -q";
                 break;
-            case ComponentType.CodeBlock:
-                switch (language)
-                {
-                    case Language.cpp:
-                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
-                        arguments = $"--dry-run --Werror --assume-filename=foo.cpp";
-                        break;
-                    case Language.c:
-                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
-                        arguments = $"--dry-run --Werror --assume-filename=foo.c";
-                        break;
-                    case Language.python:
-                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\flake8.exe";
-                        arguments = $"-";
-                        break;
-                    case Language.sql:
-                        filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\sqlfluff.exe";
-                        arguments = $"lint - --dialect ansi";
-                        break;
-                    default:
-                        break;
-                }
+            case ComponentType.CppCodeBlock:
+                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                arguments = $"--dry-run --Werror --assume-filename=foo.cpp";
+                break;
+            case ComponentType.CCodeBlock:
+                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                arguments = $"--dry-run --Werror --assume-filename=foo.c";
+                break;
+            case ComponentType.PythonCodeBlock:
+                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\flake8.exe";
+                arguments = $"-";
+                break;
+            case ComponentType.SqlCodeBlock:
+                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\sqlfluff.exe";
+                arguments = $"lint - --dialect ansi";
                 break;
             // TODO - Try HTML linter
             case ComponentType.YouTube:

@@ -12,30 +12,25 @@ namespace AwesomeCodeFixerLibrary
 {
     public static class ExtensionManager
     {
-        public static string LintCode(string content)
+        public static List<ErrorModel> LintCode(string content)
         {
-            StringBuilder sb = new StringBuilder();
+            List<ErrorModel> output = new();
 
             var components = Decompose(ref content, true);
 
-            sb.Append(Linter.Lint(content, ComponentType.Markdown));
+            Linter.Lint(content, ComponentType.Markdown);
 
             foreach (var component in components.Values)
             {
-                if (component.ComponentType == ComponentType.CodeBlock)
-                {
-                    string lintOutput = Linter.Lint(ExtractCodeFromCodeBlock(component.Content), component.ComponentType, 
-                            component.Language, component.Position);
-                    sb.Append(lintOutput);
-                }
-                else
-                {
-                    string lintOutput = Linter.Lint(component.Content, component.ComponentType, componentPosition: component.Position);
-                    sb.Append(lintOutput);
-                }
+                Linter.Lint(component.Content, component.ComponentType, component.Position);
             }
 
-            return sb.ToString();
+            return output;
+        }
+
+        private static Point RecalculateErrorLocation()
+        {
+
         }
 
         public static string FormatCode(string content)
