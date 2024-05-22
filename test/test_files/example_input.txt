@@ -33,7 +33,7 @@ $$
 tekst artykulu tekst artykulutekst artykulu
 tekst artykulu
 ```Python
-print("Hello world!")
+print("Hello world! ")
 ```
 tekst artykulu
 tekst artykulu

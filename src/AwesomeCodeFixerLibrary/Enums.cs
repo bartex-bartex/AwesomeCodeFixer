@@ -6,19 +6,14 @@ public enum ComponentType
     Markdown,
     InlineLatex,
     BlockLatex,
-    CodeBlock,
+    CppCodeBlock,
+    CCodeBlock,
+    PythonCodeBlock,
+    SqlCodeBlock,
+    UnspecifiedCodeBlock,
     YouTube,
     Info,
     Note,
     Warning,
     DeepDive
-}
-
-public enum Language
-{
-    cpp,
-    c,
-    python,
-    sql,
-    unspecified
 }

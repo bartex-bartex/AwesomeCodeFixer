@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace AwesomeCodeFixerLibrary
 {
@@ -15,7 +16,7 @@ namespace AwesomeCodeFixerLibrary
         {
             StringBuilder sb = new StringBuilder();
 
-            var components = Decompose(ref content);
+            var components = Decompose(ref content, true);
 
             sb.Append(Linter.Lint(content, ComponentType.Markdown));
 
@@ -23,12 +24,13 @@ namespace AwesomeCodeFixerLibrary
             {
                 if (component.ComponentType == ComponentType.CodeBlock)
                 {
-                    string lintOutput = Linter.Lint(ExtractCodeFromCodeBlock(component.Content), component.ComponentType, component.Language);
+                    string lintOutput = Linter.Lint(ExtractCodeFromCodeBlock(component.Content), component.ComponentType, 
+                            component.Language, component.Position);
                     sb.Append(lintOutput);
                 }
                 else
                 {
-                    string lintOutput = Linter.Lint(component.Content, component.ComponentType, component.Language);
+                    string lintOutput = Linter.Lint(component.Content, component.ComponentType, componentPosition: component.Position);
                     sb.Append(lintOutput);
                 }
             }
@@ -38,7 +40,7 @@ namespace AwesomeCodeFixerLibrary
 
         public static string FormatCode(string content)
         {
-            var components = Decompose(ref content);
+            var components = Decompose(ref content, false);
 
             content = Formatter.Format(content, ComponentType.Markdown);
 
@@ -46,7 +48,8 @@ namespace AwesomeCodeFixerLibrary
             {
                 if (component.ComponentType == ComponentType.CodeBlock)
                 {
-                    string formattedComponent = Formatter.Format(ExtractCodeFromCodeBlock(component.Content), component.ComponentType, component.Language);
+                    string formattedComponent = Formatter.Format(ExtractCodeFromCodeBlock(component.Content), 
+                                    component.ComponentType, component.Language);
                     component.Content = PutCodeIntoCodeBlock(formattedComponent, component.Language);
                 }
                 else
@@ -63,81 +66,72 @@ namespace AwesomeCodeFixerLibrary
 
         private static string Compose(string content, Dictionary<string, ComponentModel> componentsByTokens)
         {
-            foreach (var entry in componentsByTokens.Reverse())
+            foreach (var pair in componentsByTokens.Reverse())
             {
-                content = content.Replace(entry.Key, entry.Value.Content);
+                content = content.Replace(pair.Key, pair.Value.Content);
             }
 
             return content;
         }
 
-        private static Dictionary<string, ComponentModel> Decompose(ref string content)
+        private static Dictionary<string, ComponentModel> Decompose(ref string content, bool appendComponentPosition)
         {
             int tokenCounter = 0;
-            Dictionary<string, ComponentModel> componentsByTokens = new();
+            string contentCopy = content;
+            Dictionary<string, ComponentModel> output = new();
 
-            Dictionary<ComponentType, string> componentsByPatterns = new()
+            foreach (ComponentType componentType in Converter.GetComponentTypes())
             {
-                { ComponentType.Header, @"---[\s\S]*?---" },
-                { ComponentType.BlockLatex, @"\$\$[^\$]+\$\$" },
-                { ComponentType.InlineLatex, @"\$[^\$]+\$" },
-                { ComponentType.CodeBlock, @"```\w+[\s\S]*?```" },
-                { ComponentType.YouTube, @"<YouTube[\s\S]*?/>" },
-                // TODO - add support for NESTING THE SAME COMPONENTS
-                { ComponentType.Info, @"<Info[\s\S]*?>[\s\S]*?</Info>" },
-                { ComponentType.Note, @"<Note[\s\S]*?>[\s\S]*?</Note>" },
-                { ComponentType.Warning, @"<Warning[\s\S]*?>[\s\S]*?</Warning>" },
-                { ComponentType.DeepDive, @"<DeepDive[\s\S]*?>[\s\S]*?</DeepDive>" }
-            };
+                string pattern = Converter.ConvertComponentTypeToPattern(componentType);
 
-            List<ComponentType> nestingComponents = new()
-            {
-                ComponentType.Info,
-                ComponentType.Note,
-                ComponentType.Warning,
-                ComponentType.DeepDive
-            };
-
-            foreach (var entry in componentsByPatterns)
-            {
-                // TODO - fix SonarLint warning + PERFORMANCE check
-                foreach (Match match in Regex.Matches(content, entry.Value))
+                foreach (string match in Regex.Matches(content, pattern).Select(x => x.Value))
                 {
-                    string key = $"token{tokenCounter}";
+                    string token = $"token{tokenCounter}";
 
-                    if (entry.Key == ComponentType.CodeBlock)
+                    output.Add(token, new ComponentModel(match, componentType));
+
+                    if (appendComponentPosition)
                     {
-                        componentsByTokens.Add(key, 
-                            new ComponentModel(match.Value, entry.Key, GetCodeBlockLanguage(match.Value)));
+                        output[token].Position = GetComponentPosition(contentCopy, output, componentType, match);
                     }
-                    else
-                    {
-                        componentsByTokens.Add(key, new ComponentModel(match.Value, entry.Key));
-                    }
-                    
-                    content = content.Replace(match.Value, key);
+
+                    content = content.Replace(match, token);
                     tokenCounter++;
                 }
             }
 
-            return componentsByTokens;
+            return output;
         }
 
-        private static Language GetCodeBlockLanguage(string codeBlock)
+        private static Point GetComponentPosition(string fullContent, Dictionary<string, ComponentModel> replacedTokens,
+                                     ComponentType componentType, string match)
         {
-            string codeBlockLanguage = Regex.Match(codeBlock, @"\w+").ToString();
-            Language lang;
+            string? foundToken;
 
-            if (Enum.TryParse(typeof(Language), codeBlockLanguage.ToLower(), out object? parsedValue))
+            // if match contains tokens, replace them
+            if (Converter.GetNestingComponents().Contains(componentType))
             {
-                lang = (Language)parsedValue;
-            }
-            else
-            {
-                lang = Language.unspecified;
+                while ((foundToken = replacedTokens.Keys.FirstOrDefault(t => match.Contains(t))) != null)
+                {
+                    match = Regex.Replace(match, foundToken, replacedTokens[foundToken].Content);
+                }
             }
 
-            return lang;
+            // if match contains code block, offset it by one line
+            int lineOffset = 0;
+            if (Converter.GetCodeBlockComponentTypes().Contains(componentType)) { lineOffset = 1; }
+
+            // TODO - remove | append position data to ComponentModel
+            //output[token].Position = GetComponentPosition(contentCopy, matchCopy, lineOffset);
+            
+            // Get position of the component
+            int pos = fullContent.IndexOf(match);
+            List<string> contentBeforeComponent = fullContent.Substring(0, pos).Split(Environment.NewLine).ToList();
+
+            int line = contentBeforeComponent.Count + lineOffset;
+            int column = contentBeforeComponent[^1].Length + 1;
+
+            return new Point(line, column);
         }
 
         private static string ExtractCodeFromCodeBlock(string codeBlock)
@@ -151,9 +145,9 @@ namespace AwesomeCodeFixerLibrary
             return codeBlock;
         }
 
-        private static string PutCodeIntoCodeBlock(string code, Language language)
+        private static string PutCodeIntoCodeBlock(string code, ComponentType language)
         {
-            return $"```{language.ToString()}{Environment.NewLine}{code}{Environment.NewLine}```";
+            return $"```{Converter.ConvertComponentTypeToLanguage(language)}{Environment.NewLine}{code}{Environment.NewLine}```";
         }
     }
 }

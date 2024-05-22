@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Drawing;
 
 namespace AwesomeCodeFixerLibrary;
 
@@ -10,7 +11,8 @@ public static class Linter
     /// <param name="content">Component content</param>
     /// <param name="componentType">Type of component</param>
     /// <returns>String with linting warnings and errors</returns>
-    public static string Lint(string content, ComponentType componentType, Language? language = null)
+    public static string Lint(string content, ComponentType componentType, 
+            Language? language = null, Point componentPosition = default(Point))
     {
         string output = "";
 
@@ -111,6 +113,8 @@ public static class Linter
                 linter.WaitForExit();
             }
         }
+
+        Debug.WriteLine(componentPosition.ToString());
 
         return output;
     }
