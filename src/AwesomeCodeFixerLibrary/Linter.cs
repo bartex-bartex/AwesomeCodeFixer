@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 
 namespace AwesomeCodeFixerLibrary;
 
@@ -41,8 +42,10 @@ public static class Linter
                 break;
             case ComponentType.SqlCodeBlock:
                 filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\sqlfluff.exe";
-                arguments = $"lint - --dialect ansi";
+                arguments = $"lint - --format github-annotation --dialect ansi";
                 break;
+            case ComponentType.UnspecifiedCodeBlock:
+                return "";
             // TODO - Try HTML linter
             case ComponentType.YouTube:
             case ComponentType.Info:
@@ -51,13 +54,16 @@ public static class Linter
             case ComponentType.DeepDive:
                 Debug.WriteLine("echo 'No Linting for this component'");
                 return "";
-                break;
             default:
                 break;
         }
 
+        StringBuilder outputBuilder = new StringBuilder();
+        StringBuilder errorBuilder = new StringBuilder();
+
         using (Process linter = new Process())
         {
+
             if (componentType == ComponentType.InlineLatex 
                     || componentType == ComponentType.BlockLatex)
             {
@@ -92,6 +98,10 @@ public static class Linter
 
                 linter.StartInfo.UseShellExecute = false;
                 linter.StartInfo.CreateNoWindow = true;
+
+                linter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
+                linter.ErrorDataReceived += (sender, e) => errorBuilder.AppendLine(e.Data);
+
                 linter.Start();
                 
                 linter.StandardInput.NewLine = Environment.NewLine;
@@ -99,8 +109,11 @@ public static class Linter
                 linter.StandardInput.WriteLine(content);
                 linter.StandardInput.Close();
 
-                // Waits until process terminates
-                output = linter.StandardOutput.ReadToEnd();
+                // Freezes when output is too big and fills whole buffer
+                //output = linter.StandardOutput.ReadToEnd();
+
+                linter.BeginOutputReadLine();
+                linter.BeginErrorReadLine();
 
                 linter.WaitForExit();
             }
@@ -108,6 +121,6 @@ public static class Linter
 
         Debug.WriteLine(componentPosition.ToString());
 
-        return output;
+        return outputBuilder.ToString();
     }
 }

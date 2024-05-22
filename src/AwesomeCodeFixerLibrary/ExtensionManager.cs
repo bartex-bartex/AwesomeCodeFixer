@@ -18,46 +18,58 @@ namespace AwesomeCodeFixerLibrary
 
             var components = Decompose(ref content, true);
 
-            Linter.Lint(content, ComponentType.Markdown);
+            string lintOutput = Linter.Lint(content, ComponentType.Markdown);
+            output.AddRange(ErrorManager.DeserializeIssues(lintOutput, ComponentType.Markdown));
 
+            var codeBlockComponents = Converter.GetCodeBlockComponentTypes();
             foreach (var component in components.Values)
             {
-                Linter.Lint(component.Content, component.ComponentType, component.Position);
+                string componentContent = component.Content;
+
+                if (codeBlockComponents.Contains(component.ComponentType))
+                {
+                    componentContent = ExtractCodeFromCodeBlock(componentContent);
+                }
+
+                lintOutput = Linter.Lint(componentContent, component.ComponentType, component.Position);
+                output.AddRange(ErrorManager.DeserializeIssues(lintOutput, component.ComponentType));
             }
+
+            output.Sort();
 
             return output;
         }
 
         private static Point RecalculateErrorLocation()
         {
-
+            return Point.Empty;
         }
 
-        public static string FormatCode(string content)
-        {
-            var components = Decompose(ref content, false);
+        // public static string FormatCode(string content)
+        // {
+        //     var components = Decompose(ref content, false);
 
-            content = Formatter.Format(content, ComponentType.Markdown);
+        //     content = Formatter.Format(content, ComponentType.Markdown);
 
-            foreach (var component in components.Values)
-            {
-                if (component.ComponentType == ComponentType.CodeBlock)
-                {
-                    string formattedComponent = Formatter.Format(ExtractCodeFromCodeBlock(component.Content), 
-                                    component.ComponentType, component.Language);
-                    component.Content = PutCodeIntoCodeBlock(formattedComponent, component.Language);
-                }
-                else
-                {
-                    string formattedComponent = Formatter.Format(component.Content, component.ComponentType);
-                    component.Content = formattedComponent;
-                }
-            }
+        //     foreach (var component in components.Values)
+        //     {
+        //         if (component.ComponentType == ComponentType.CodeBlock)
+        //         {
+        //             string formattedComponent = Formatter.Format(ExtractCodeFromCodeBlock(component.Content), 
+        //                             component.ComponentType, component.Language);
+        //             component.Content = PutCodeIntoCodeBlock(formattedComponent, component.Language);
+        //         }
+        //         else
+        //         {
+        //             string formattedComponent = Formatter.Format(component.Content, component.ComponentType);
+        //             component.Content = formattedComponent;
+        //         }
+        //     }
 
-            content = Compose(content, components);
+        //     content = Compose(content, components);
 
-            return content;
-        }
+        //     return content;
+        // }
 
         private static string Compose(string content, Dictionary<string, ComponentModel> componentsByTokens)
         {
@@ -82,20 +94,39 @@ namespace AwesomeCodeFixerLibrary
                 foreach (string match in Regex.Matches(content, pattern).Select(x => x.Value))
                 {
                     string token = $"token{tokenCounter}";
+                    string matchCopy = match;
 
-                    output.Add(token, new ComponentModel(match, componentType));
+                    // I am matching Latex and 1 char before to exclude "\$" possibility
+                    if (componentType == ComponentType.InlineLatex 
+                            || componentType == ComponentType.BlockLatex)
+                    {
+                        matchCopy = NormalizeLatex(matchCopy);
+                    }
+
+                    output.Add(token, new ComponentModel(matchCopy, componentType));
 
                     if (appendComponentPosition)
                     {
-                        output[token].Position = GetComponentPosition(contentCopy, output, componentType, match);
+                        output[token].Position = GetComponentPosition(contentCopy, output, componentType, matchCopy);
                     }
 
-                    content = content.Replace(match, token);
+                    content = content.Replace(matchCopy, token);
                     tokenCounter++;
                 }
             }
 
             return output;
+        }
+
+        private static string NormalizeLatex(string latex)
+        {
+            if (latex[1] == '$' && latex[2] == '$') 
+                return latex.Substring(1);
+
+            else if (latex[1] == '$') 
+                return latex.Substring(1);
+
+            return latex;
         }
 
         private static Point GetComponentPosition(string fullContent, Dictionary<string, ComponentModel> replacedTokens,

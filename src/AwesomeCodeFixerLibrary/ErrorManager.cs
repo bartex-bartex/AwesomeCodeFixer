@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace AwesomeCodeFixerLibrary;
 
@@ -7,6 +8,8 @@ internal static class ErrorManager
     public static List<ErrorModel> DeserializeIssues(string linterOutput, ComponentType componentType)
     {
         List<ErrorModel> output = new();
+
+        if (string.IsNullOrEmpty(linterOutput)) return output;
 
         switch (componentType)
         {
@@ -40,40 +43,33 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
+        List<string> lines = linterOutput.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList(); 
+
+        // Skip frist 2 and last 5 rows
+        for (int i = 2; i < lines.Count - 5; i ++)
+        {
+            string[] chunks = lines[i].TrimStart().Split("  ", 4);
+            string row = chunks[0].Split(':')[0];
+            string col = chunks[0].Split(':')[1];
+
+            string message = chunks[2];
+
+            output.Add(new ErrorModel
+            {
+                Row = row,
+                Column = col,
+                Message = message
+            });
+        }
+
         return output;
     }
 
     private static List<ErrorModel> DeserializeLatexIssues(string linterOutput)
     {
-        // TODO - Implement support also for errors not only warnings
         List<ErrorModel> output = new();
 
-        // // Omit 2 first rows
-        // List<string> errors = linterOutput.Split(Environment.NewLine).Skip(2).ToList();
-
-        // // Consider 3 subsequent rows as single error (skip last to rows)
-        // for (int i = 0; i < errors.Count - 2; i += 3)
-        // {
-        //     string[] chunks = errors[i].Split(':', 2);
-        //     string rowChunk = chunks[0];
-        //     string message = chunks[1];
-        //     string columnChunk = errors[i + 2];
-
-        //     // Get row
-        //     string row = Regex.Match(rowChunk, @"line (\d+):").Groups[1].Value;
-
-        //     // Get column
-        //     string column = columnChunk.IndexOf("^").ToString();
-
-        //     output.Add(new ErrorModel
-        //     {
-        //         Message = message,
-        //         Row = row,
-        //         Column = column
-        //     });
-        // }
-
-        foreach(string line in linterOutput.Split(Environment.NewLine))
+        foreach(string line in linterOutput.Split('\n'))
         {
             string[] chunks =  line.Split(' ', 3);
 
@@ -106,12 +102,26 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
+        foreach (string line in linterOutput.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string[] chunks = line.Split(':', 4);
+
+            output.Add(new ErrorModel
+            {
+                Row = chunks[1],
+                Column = chunks[2],
+                Message = chunks[3]
+            });
+        }
+
         return output;
     }
 
     private static List<ErrorModel> DeserializeSqlIssues(string linterOutput)
     {
         List<ErrorModel> output = new();
+
+        output = JsonConvert.DeserializeObject<List<ErrorModel>>(linterOutput);
 
         return output;
     }

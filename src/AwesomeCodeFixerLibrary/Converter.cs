@@ -14,12 +14,12 @@ internal static class Converter
     private static Dictionary<ComponentType, string> componentTypeToPattern = new()
     {
         //{ ComponentType.Header, @"---[\s\S]*?---" },
-        { ComponentType.BlockLatex, @"\$\$[^\$]+\$\$" },
-        { ComponentType.InlineLatex, @"\$[^\$]+\$" },
-        { ComponentType.CppCodeBlock, @"```cpp[\s\S]*?```" },
-        { ComponentType.CCodeBlock, @"```c[\s\S]*?```" },
-        { ComponentType.PythonCodeBlock, @"```python[\s\S]*?```" },
-        { ComponentType.SqlCodeBlock, @"```sql[\s\S]*?```" },
+        { ComponentType.BlockLatex, @"(^|[^\\])\$\$[^\$]+[^\\]\$\$" },
+        { ComponentType.InlineLatex, @"(^|[^\\])\$[^\$]+[^\\]\$" },
+        { ComponentType.CppCodeBlock, @"```[Cc]pp[\s\S]*?```" },
+        { ComponentType.CCodeBlock, @"```[Cc][\s\S]*?```" },
+        { ComponentType.PythonCodeBlock, @"```[Pp]ython[\s\S]*?```" },
+        { ComponentType.SqlCodeBlock, @"```[Ss]ql[\s\S]*?```" },
         { ComponentType.UnspecifiedCodeBlock, @"```\w+[\s\S]*?```" },
         { ComponentType.YouTube, @"<YouTube[\s\S]*?/>" },
         // TODO - add support for NESTING THE SAME COMPONENTS

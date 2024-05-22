@@ -14,10 +14,12 @@ internal class Program
         string content = File.ReadAllText(path);
 
         //string formattedContent = ExtensionManager.FormatCode(content);
-        string lintOutput = ExtensionManager.LintCode(content);
+        var lintOutput = ExtensionManager.LintCode(content);
 
-        //System.Console.WriteLine(formattedContent);
-        System.Console.WriteLine(lintOutput);
+        foreach (var error in lintOutput)
+        {
+            System.Console.WriteLine($"{error.Row}:{error.Column} | {error.Message}");
+        }
 
         stopwatch.Stop();
         Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
