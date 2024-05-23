@@ -54,10 +54,13 @@ internal static class ErrorManager
 
             string message = chunks[2];
 
+            int.TryParse(row, out int rowInt);
+            int.TryParse(col, out int colInt);
+
             output.Add(new ErrorModel
             {
-                Row = row,
-                Column = col,
+                Row = rowInt,
+                Column = colInt,
                 Message = message
             });
         }
@@ -73,10 +76,13 @@ internal static class ErrorManager
         {
             string[] chunks =  line.Split(' ', 3);
 
+            int.TryParse(chunks[0], out int rowInt);
+            int.TryParse(chunks[1], out int colInt);
+
             output.Add(new ErrorModel
             {
-                Row = chunks[0],
-                Column = chunks[1],
+                Row = rowInt,
+                Column = colInt,
                 Message = chunks[2]
             });
         }
@@ -106,10 +112,13 @@ internal static class ErrorManager
         {
             string[] chunks = line.Split(':', 4);
 
+            int.TryParse(chunks[1], out int rowInt);
+            int.TryParse(chunks[2], out int colInt);
+
             output.Add(new ErrorModel
             {
-                Row = chunks[1],
-                Column = chunks[2],
+                Row = rowInt,
+                Column = colInt,
                 Message = chunks[3]
             });
         }

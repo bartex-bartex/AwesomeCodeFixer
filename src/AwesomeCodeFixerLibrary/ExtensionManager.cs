@@ -18,6 +18,7 @@ namespace AwesomeCodeFixerLibrary
 
             var components = Decompose(ref content, true);
 
+            // Lint markdown content
             string lintOutput = Linter.Lint(content, ComponentType.Markdown);
             output.AddRange(ErrorManager.DeserializeIssues(lintOutput, ComponentType.Markdown));
 
@@ -31,8 +32,10 @@ namespace AwesomeCodeFixerLibrary
                     componentContent = ExtractCodeFromCodeBlock(componentContent);
                 }
 
+                // Lint components content
                 lintOutput = Linter.Lint(componentContent, component.ComponentType, component.Position);
-                output.AddRange(ErrorManager.DeserializeIssues(lintOutput, component.ComponentType));
+                component.Errors = ErrorManager.DeserializeIssues(lintOutput, component.ComponentType);
+                output.AddRange(component.Errors);
             }
 
             output.Sort();
@@ -40,8 +43,34 @@ namespace AwesomeCodeFixerLibrary
             return output;
         }
 
-        private static Point RecalculateErrorLocation()
+        private static Point OffsetErrorLocation(string content, Dictionary<string, ComponentModel> tokenToComponent)
         {
+            foreach (ComponentModel component in tokenToComponent.Values)
+            {
+                if (Converter.GetNonNestingComponents().Contains(component.ComponentType))
+                {
+                    foreach (ErrorModel error in component.Errors)
+                    {
+                        error.Row += component.Position.X - 1;
+                        error.Column += component.Position.Y - 1;
+                    }
+                }
+                else
+                {
+                    string foundToken;
+                    string match = component.Content;
+
+                    // Replace tokens with actual content
+                    while ((foundToken = tokenToComponent.Keys.FirstOrDefault(t => match.Contains(t))) != null)
+                    {
+                        match = Regex.Replace(match, foundToken, tokenToComponent[foundToken].Content);
+                    }
+
+
+                }
+                
+            }
+
             return Point.Empty;
         }
 
@@ -129,7 +158,7 @@ namespace AwesomeCodeFixerLibrary
             return latex;
         }
 
-        private static Point GetComponentPosition(string fullContent, Dictionary<string, ComponentModel> replacedTokens,
+        private static Point GetComponentPosition(string fullContent, Dictionary<string, ComponentModel> tokenToComponent,
                                      ComponentType componentType, string match)
         {
             string? foundToken;
@@ -137,18 +166,15 @@ namespace AwesomeCodeFixerLibrary
             // if match contains tokens, replace them
             if (Converter.GetNestingComponents().Contains(componentType))
             {
-                while ((foundToken = replacedTokens.Keys.FirstOrDefault(t => match.Contains(t))) != null)
+                while ((foundToken = tokenToComponent.Keys.FirstOrDefault(t => match.Contains(t))) != null)
                 {
-                    match = Regex.Replace(match, foundToken, replacedTokens[foundToken].Content);
+                    match = Regex.Replace(match, foundToken, tokenToComponent[foundToken].Content);
                 }
             }
 
             // if match contains code block, offset it by one line
             int lineOffset = 0;
             if (Converter.GetCodeBlockComponentTypes().Contains(componentType)) { lineOffset = 1; }
-
-            // TODO - remove | append position data to ComponentModel
-            //output[token].Position = GetComponentPosition(contentCopy, matchCopy, lineOffset);
             
             // Get position of the component
             int pos = fullContent.IndexOf(match);

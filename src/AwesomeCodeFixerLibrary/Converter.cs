@@ -31,6 +31,7 @@ internal static class Converter
 
     private static List<ComponentType> nestingComponents = new()
     {
+        ComponentType.Markdown,
         ComponentType.Info,
         ComponentType.Note,
         ComponentType.Warning,
@@ -75,5 +76,10 @@ internal static class Converter
     public static List<ComponentType> GetNestingComponents()
     {
         return nestingComponents;
+    }
+
+    public static List<ComponentType> GetNonNestingComponents()
+    {
+        return componentTypeToPattern.Keys.Except(nestingComponents).ToList();
     }
 }

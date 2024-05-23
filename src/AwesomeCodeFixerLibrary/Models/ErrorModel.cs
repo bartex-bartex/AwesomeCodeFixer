@@ -6,10 +6,10 @@ public class ErrorModel : IComparable<ErrorModel>
 {
     // TODO - change to int
     [JsonProperty("start_line")]
-    public string Row { get; set; }
+    public int Row { get; set; }
 
     [JsonProperty("start_column")]
-    public string Column { get; set; }
+    public int Column { get; set; }
 
     [JsonProperty("message")]
     public string Message { get; set; } = string.Empty;
