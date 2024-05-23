@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System.Diagnostics;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace AwesomeCodeFixerLibrary
 {
@@ -16,26 +17,38 @@ namespace AwesomeCodeFixerLibrary
         {
             List<ErrorModel> output = new();
 
-            var components = Decompose(ref content, true);
-
-            // Lint markdown content
-            string lintOutput = Linter.Lint(content, ComponentType.Markdown);
-            output.AddRange(ErrorManager.DeserializeIssues(lintOutput, ComponentType.Markdown));
-
+            ComponentModel rootComponent = Decompose(content, true);
             var codeBlockComponents = Converter.GetCodeBlockComponentTypes();
-            foreach (var component in components.Values)
-            {
-                string componentContent = component.Content;
 
-                if (codeBlockComponents.Contains(component.ComponentType))
+            // Linting part
+            List<ComponentModel> current = new() { rootComponent };
+            List<ComponentModel> next = new();
+
+            while (current.Count > 0)
+            {
+                foreach (var component in current)
                 {
-                    componentContent = ExtractCodeFromCodeBlock(componentContent);
+                    string componentContent = component.Content;
+
+                    // Extract code from code block
+                    if (codeBlockComponents.Contains(component.ComponentType))
+                    {
+                        componentContent = ExtractCodeFromCodeBlock(componentContent);
+                    }
+
+                    // Lint component
+                    string lintOutput = Linter.Lint(componentContent, component.ComponentType);
+                    component.Errors = ErrorManager.DeserializeIssues(lintOutput, component.ComponentType);
+                    output.AddRange(component.Errors);
+
+                    // Offset error location
+                    OffsetErrorLocation(component);
+
+                    next.AddRange(component.Children);
                 }
 
-                // Lint components content
-                lintOutput = Linter.Lint(componentContent, component.ComponentType, component.Position);
-                component.Errors = ErrorManager.DeserializeIssues(lintOutput, component.ComponentType);
-                output.AddRange(component.Errors);
+                current = next;
+                next.Clear();
             }
 
             output.Sort();
@@ -43,35 +56,80 @@ namespace AwesomeCodeFixerLibrary
             return output;
         }
 
-        private static Point OffsetErrorLocation(string content, Dictionary<string, ComponentModel> tokenToComponent)
+        // TODO - Fix this method - not even working
+        private static void OffsetErrorLocation(ComponentModel component)
         {
-            foreach (ComponentModel component in tokenToComponent.Values)
+            List<TokenDetailDto> tokenDetails = component.Children.Select(x => new TokenDetailDto(x.Token, x.StartPosition, x.EndPosition)).ToList();
+            tokenDetails.ForEach(t => t.RelativeStartPosition = GetTokenRelativeStartPosition(component.Content, t.Token));
+            tokenDetails = tokenDetails.Where(x => x.RelativeStartPosition.X >= 0).ToList();
+            tokenDetails.Sort();
+
+            foreach (var error in component.Errors)
             {
-                if (Converter.GetNonNestingComponents().Contains(component.ComponentType))
+                // Find the closest preceding token
+                TokenDetailDto? mostPrecedingToken = GetMostPrecedingToken(error.Row, error.Column, tokenDetails);
+
+                // meaning no token preceding the error
+                if (mostPrecedingToken == null)
                 {
-                    foreach (ErrorModel error in component.Errors)
-                    {
-                        error.Row += component.Position.X - 1;
-                        error.Column += component.Position.Y - 1;
-                    }
+                    error.Row += component.StartPosition.X - 1;
+                    continue;
                 }
-                else
-                {
-                    string foundToken;
-                    string match = component.Content;
 
-                    // Replace tokens with actual content
-                    while ((foundToken = tokenToComponent.Keys.FirstOrDefault(t => match.Contains(t))) != null)
-                    {
-                        match = Regex.Replace(match, foundToken, tokenToComponent[foundToken].Content);
-                    }
+                // Relative token end position
+                Point tokenRelativeEndPosition = new(mostPrecedingToken.RelativeStartPosition.X, mostPrecedingToken.RelativeStartPosition.Y + mostPrecedingToken.Token.Length);
 
+                // Offset error location according to the most preceding token end position
+                int a = error.Row - tokenRelativeEndPosition.X;
+                int b = error.Column - tokenRelativeEndPosition.Y;
 
-                }
+                // Applicate offset
+                error.Row = a + mostPrecedingToken.EndPosition.X;
+
+                if (a == 0) { error.Column = b + mostPrecedingToken.EndPosition.Y; }
+
+                // Point componentStartPos = component.StartPosition;
+                // Point errorStartPos = new Point(error.Row, error.Column);
+
+                // int totalTokensHeight = tokenDetails
+                //                             .Where(t => t.StartPosition.X < errorStartPos.X)
+                //                             .Sum(t => t.EndPosition.X - t.StartPosition.X + 1);
+
+                // int finalRow = error.Row + component.StartPosition.X - 1 + totalTokensHeight; 
                 
+                // int totalTokensWidth = 0;
+                // var matchingTokens = tokenDetails
+                //                             .Where(t => t.EndPosition.X == errorStartPos.X);
+
+                // if (matchingTokens.Any())
+                // {
+                //     totalTokensWidth = matchingTokens.Max(t => t.EndPosition.Y);
+                // }            
+                
+                // int finalColumn = error.Column + totalTokensWidth;
+
+                // error.Row = finalRow;
+                // error.Column = finalColumn;
             }
 
-            return Point.Empty;
+        }
+
+        private static TokenDetailDto? GetMostPrecedingToken(int errorRow, int errorColumn, List<TokenDetailDto> tokenDetails)
+        {
+            TokenDetailDto? mostPrecedingToken = null;
+
+            foreach (var token in tokenDetails)
+            {
+                if (token.RelativeStartPosition.X > errorRow 
+                    || (token.RelativeStartPosition.X == errorRow && token.RelativeStartPosition.Y > errorColumn))
+                {
+                    break;
+                }
+
+                mostPrecedingToken = token;
+            }
+
+            return mostPrecedingToken;
         }
 
         // public static string FormatCode(string content)
@@ -100,51 +158,93 @@ namespace AwesomeCodeFixerLibrary
         //     return content;
         // }
 
-        private static string Compose(string content, Dictionary<string, ComponentModel> componentsByTokens)
+        private static string Compose(ComponentModel rootComponent)
         {
-            foreach (var pair in componentsByTokens.Reverse())
-            {
-                content = content.Replace(pair.Key, pair.Value.Content);
-            }
+            string rootContent = rootComponent.Content;
 
-            return content;
+            foreach (ComponentModel component in rootComponent.Children)
+            {
+                if (component.Children.Count > 0)
+                {
+                    string childContent = Compose(component);
+
+                    // Above string contains full legit content
+                    rootContent = rootContent.Replace(component.Token, childContent);
+                }
+                else
+                {
+                    rootContent = rootContent.Replace(component.Token, component.Content);
+                }
+
+            } 
+
+            return rootContent;
         }
 
-        private static Dictionary<string, ComponentModel> Decompose(ref string content, bool appendComponentPosition)
+        // Position is 100% true according to original content
+        private static ComponentModel Decompose(string content, bool appendComponentPosition)
         {
-            int tokenCounter = 0;
-            string contentCopy = content;
-            Dictionary<string, ComponentModel> output = new();
+            ComponentModel rootComponent = new(content, ComponentType.Markdown, 
+                    new Point(1, 1), GetComponentEndPositon(content, new Point(1, 1)));
+            List<ComponentModel> next = new()
+            { 
+                rootComponent
+            };
 
-            foreach (ComponentType componentType in Converter.GetComponentTypes())
+            while (next.Count > 0)
             {
-                string pattern = Converter.ConvertComponentTypeToPattern(componentType);
+                ComponentModel current = next[0];
+                next.RemoveAt(0);
 
-                foreach (string match in Regex.Matches(content, pattern).Select(x => x.Value))
+                string parentOriginalContent = current.Content;
+
+                // Start with nesting component types
+                foreach (ComponentType componentType in Converter.GetComponentTypes())
                 {
-                    string token = $"token{tokenCounter}";
-                    string matchCopy = match;
+                    string pattern = Converter.ConvertComponentTypeToPattern(componentType);
 
-                    // I am matching Latex and 1 char before to exclude "\$" possibility
-                    if (componentType == ComponentType.InlineLatex 
-                            || componentType == ComponentType.BlockLatex)
+                    foreach (string match in Regex.Matches(current.Content, pattern).Select(x => x.Value))
                     {
-                        matchCopy = NormalizeLatex(matchCopy);
+                        // Do not allow to match the whole content <=> infinite loop
+                        if (match.Length == current.Content.Length) { continue; }
+
+                        // E.g. for latex we need to match 1 char before to exclude "\$" possibility, now it is reversed
+                        string normalizedMatch = NormalizeMatch(componentType, match);
+
+                        string token = Guid.NewGuid().ToString();
+
+                        // Create child
+                        ComponentModel child = new ComponentModel(token, normalizedMatch, componentType);
+                        current.Content = current.Content.Replace(normalizedMatch, token);
+
+                        if (appendComponentPosition)
+                        {
+                            child.StartPosition = GetComponentStartPosition(parentOriginalContent, normalizedMatch, current.StartPosition);
+                            child.EndPosition = GetComponentEndPositon(normalizedMatch, child.StartPosition);
+                        }
+
+                        // Add child
+                        current.Children.Add(child);
+                        next.Add(child);
                     }
-
-                    output.Add(token, new ComponentModel(matchCopy, componentType));
-
-                    if (appendComponentPosition)
-                    {
-                        output[token].Position = GetComponentPosition(contentCopy, output, componentType, matchCopy);
-                    }
-
-                    content = content.Replace(matchCopy, token);
-                    tokenCounter++;
                 }
             }
 
-            return output;
+            return rootComponent;
+        }
+
+        private static string NormalizeMatch(ComponentType componentType, string match)
+        {
+            string matchCopy = match;
+
+            // I am matching Latex and 1 char before to exclude "\$" possibility
+            if (componentType == ComponentType.InlineLatex
+                    || componentType == ComponentType.BlockLatex)
+            {
+                matchCopy = NormalizeLatex(match);
+            }
+
+            return matchCopy;
         }
 
         private static string NormalizeLatex(string latex)
@@ -158,32 +258,38 @@ namespace AwesomeCodeFixerLibrary
             return latex;
         }
 
-        private static Point GetComponentPosition(string fullContent, Dictionary<string, ComponentModel> tokenToComponent,
-                                     ComponentType componentType, string match)
+        private static Point GetComponentStartPosition(string parentOriginalContent, string match, Point parentPosition)
         {
-            string? foundToken;
+            int pos = parentOriginalContent.IndexOf(match);
+            List<string> contentBeforeComponent = parentOriginalContent.Substring(0, pos).Split(Environment.NewLine).ToList();
 
-            // if match contains tokens, replace them
-            if (Converter.GetNestingComponents().Contains(componentType))
-            {
-                while ((foundToken = tokenToComponent.Keys.FirstOrDefault(t => match.Contains(t))) != null)
-                {
-                    match = Regex.Replace(match, foundToken, tokenToComponent[foundToken].Content);
-                }
-            }
-
-            // if match contains code block, offset it by one line
-            int lineOffset = 0;
-            if (Converter.GetCodeBlockComponentTypes().Contains(componentType)) { lineOffset = 1; }
-            
-            // Get position of the component
-            int pos = fullContent.IndexOf(match);
-            List<string> contentBeforeComponent = fullContent.Substring(0, pos).Split(Environment.NewLine).ToList();
-
-            int line = contentBeforeComponent.Count + lineOffset;
+            int row = contentBeforeComponent.Count + parentPosition.X - 1;
             int column = contentBeforeComponent[^1].Length + 1;
 
-            return new Point(line, column);
+            return new Point(row, column);
+        }
+
+        // TODO - optimize (do not split)
+        private static Point GetComponentEndPositon(string content, Point startPosition)
+        {
+            List<string> contentLines = content.Split(Environment.NewLine).ToList();
+
+            int row = startPosition.X + contentLines.Count - 1;
+            int column = contentLines[^1].Length;
+
+            return new Point(row, column);
+        }
+
+        private static Point GetTokenRelativeStartPosition(string component, string token)
+        {
+            int pos = component.IndexOf(token);
+
+            // Token get encapsulated in another token
+            if (pos == -1) { return new Point(-1, -1);}
+
+            string[] contentBeforeToken = component.Substring(0, pos).Split(Environment.NewLine);
+
+            return new Point(contentBeforeToken.Length, contentBeforeToken[^1].Length + 1);
         }
 
         private static string ExtractCodeFromCodeBlock(string codeBlock)
