@@ -15,10 +15,10 @@ internal static class Converter
     private static Dictionary<ComponentType, string> componentTypeToPattern = new()
     {
         // Nesting
-        { ComponentType.Info, @"<Info[\s\S]*?>[\s\S]*?</Info>" },
-        { ComponentType.Note, @"<Note[\s\S]*?>[\s\S]*?</Note>" },
-        { ComponentType.Warning, @"<Warning[\s\S]*?>[\s\S]*?</Warning>" },
-        { ComponentType.DeepDive, @"<DeepDive[\s\S]*?>[\s\S]*?</DeepDive>" },
+        // { ComponentType.Info, @"<Info[\s\S]*?>[\s\S]*?</Info>" },
+        // { ComponentType.Note, @"<Note[\s\S]*?>[\s\S]*?</Note>" },
+        // { ComponentType.Warning, @"<Warning[\s\S]*?>[\s\S]*?</Warning>" },
+        // { ComponentType.DeepDive, @"<DeepDive[\s\S]*?>[\s\S]*?</DeepDive>" },
         // Normal
         { ComponentType.BlockLatex, @"(^|[^\\])\$\$[^\$]+[^\\]\$\$" },
         { ComponentType.InlineLatex, @"(^|[^\\])\$[^\$]+[^\\]\$" },
@@ -33,10 +33,10 @@ internal static class Converter
     private static List<ComponentType> nestingComponents = new()
     {
         ComponentType.Markdown,
-        ComponentType.Info,
-        ComponentType.Note,
-        ComponentType.Warning,
-        ComponentType.DeepDive
+        // ComponentType.Info,
+        // ComponentType.Note,
+        // ComponentType.Warning,
+        // ComponentType.DeepDive
     };
 
     public static string ConvertComponentTypeToLanguage(ComponentType componentType)

@@ -43,16 +43,24 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
-        List<string> lines = linterOutput.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList(); 
+        string exampleMarkdownRule = "markdownlint/md001";
+        int ruleLength = exampleMarkdownRule.Length;
 
-        // Skip frist 2 and last 5 rows
-        for (int i = 2; i < lines.Count - 5; i ++)
+        // TODO - some lines might be shorter than ruleLength
+
+        // Remove rule from each line
+        List<string> lines = linterOutput
+                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
+
+        // Skip frist 1 and last 5 rows
+        for (int i = 1; i < lines.Count - 5; i ++)
         {
-            string[] chunks = lines[i].TrimStart().Split("  ", 4);
-            string row = chunks[0].Split(':')[0];
-            string col = chunks[0].Split(':')[1];
+            string[] chunks = lines[i].Split(new string[] {"  error  ", "  warning  "}, StringSplitOptions.RemoveEmptyEntries);
+            string row = chunks[0].Split(':')[0].Trim();
+            string col = chunks[0].Split(':')[1].Trim();
 
-            string message = chunks[2];
+            string message = chunks[1].Substring(0, chunks[1].Length - ruleLength).Trim();
 
             int.TryParse(row, out int rowInt);
             int.TryParse(col, out int colInt);

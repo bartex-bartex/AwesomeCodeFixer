@@ -57,7 +57,6 @@ namespace AwesomeCodeFixerLibrary
             return output;
         }
 
-        // TODO - Fix this method
         private static void OffsetErrorLocation(ComponentModel component)
         {
             List<TokenDetailDto> tokenDetails = component.Children.Select(x => new TokenDetailDto(x.Token, x.StartPosition, x.EndPosition)).ToList();
@@ -164,7 +163,6 @@ namespace AwesomeCodeFixerLibrary
             return rootContent;
         }
 
-        // Position is 100% true according to original content
         private static ComponentModel Decompose(string content, bool appendComponentPosition)
         {
             ComponentModel rootComponent = new(content, ComponentType.Markdown, 
@@ -179,9 +177,11 @@ namespace AwesomeCodeFixerLibrary
                 ComponentModel current = next[0];
                 next.RemoveAt(0);
 
-                string parentOriginalContent = current.Content;
+                // Skip non-nesting components
+                if (!Converter.GetNestingComponents().Contains(current.ComponentType)) { continue;}
 
-                // Start with nesting component types
+                // Add children and fill their data
+                string parentOriginalContent = current.Content;
                 foreach (ComponentType componentType in Converter.GetComponentTypes())
                 {
                     string pattern = Converter.ConvertComponentTypeToPattern(componentType);
