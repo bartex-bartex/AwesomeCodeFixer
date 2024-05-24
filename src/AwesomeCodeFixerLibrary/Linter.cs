@@ -53,7 +53,6 @@ public static class Linter
             case ComponentType.Note:
             case ComponentType.Warning:
             case ComponentType.DeepDive:
-                //Debug.WriteLine("echo 'No Linting for this component'");
                 return "";
             default:
                 break;
@@ -92,7 +91,6 @@ public static class Linter
                 linter.StandardInput.WriteLine(content);
                 linter.StandardInput.Close();
 
-                // Waits until process terminates
                 linter.BeginOutputReadLine();
                 linter.BeginErrorReadLine();
 

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Diagnostics;
 using System.Drawing;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace AwesomeCodeFixerLibrary
 {
@@ -114,31 +115,53 @@ namespace AwesomeCodeFixerLibrary
             return mostPrecedingToken;
         }
 
-        // public static string FormatCode(string content)
-        // {
-        //     var components = Decompose(ref content, false);
+        public static string FormatCode(string content)
+        {
+            ComponentModel rootComponent = Decompose(content, false);
+            var codeBlockComponents = Converter.GetCodeBlockComponentTypes();
 
-        //     content = Formatter.Format(content, ComponentType.Markdown);
+            // Formatting part
+            List<ComponentModel> current = new() { rootComponent };
+            List<ComponentModel> next = new();
 
-        //     foreach (var component in components.Values)
-        //     {
-        //         if (component.ComponentType == ComponentType.CodeBlock)
-        //         {
-        //             string formattedComponent = Formatter.Format(ExtractCodeFromCodeBlock(component.Content), 
-        //                             component.ComponentType, component.Language);
-        //             component.Content = PutCodeIntoCodeBlock(formattedComponent, component.Language);
-        //         }
-        //         else
-        //         {
-        //             string formattedComponent = Formatter.Format(component.Content, component.ComponentType);
-        //             component.Content = formattedComponent;
-        //         }
-        //     }
+            while (current.Count > 0)
+            {
+                foreach (var component in current)
+                {
+                    string componentContent = component.Content;
 
-        //     content = Compose(content, components);
+                    // Extract code from code block
+                    if (codeBlockComponents.Contains(component.ComponentType))
+                    {
+                        componentContent = ExtractCodeFromCodeBlock(componentContent);
+                    }
 
-        //     return content;
-        // }
+                    // Format component
+                    // TODO - output comes without polish characters!
+                    string formatOutput = Formatter.Format(componentContent, component.ComponentType);
+
+                    // Replace content with formatted content
+                    if (codeBlockComponents.Contains(component.ComponentType))
+                    {
+                        component.Content = PutCodeIntoCodeBlock(formatOutput, component.ComponentType);
+                    }
+                    else
+                    {
+                        component.Content = formatOutput;
+                    }
+
+                    next.AddRange(component.Children);
+                }
+                
+                current.Clear();
+                current.AddRange(next);
+                next.Clear();
+            }
+
+            content = Compose(rootComponent);
+
+            return content;
+        }
 
         private static string Compose(ComponentModel rootComponent)
         {
