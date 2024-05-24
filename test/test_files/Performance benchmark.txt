@@ -1,0 +1,17 @@
+Performance:
+a) Lint + Format:
+- 30s
+- 30s
+- 30s
+
+b) Lint (a sam proces lintowania
+- 18s
+- 18s
+- 15,5s XD
+
+c) Format
+- 12s
+- 12s
+- 12s
+
+Wszystko co ja napisałem +/- 0,5s tylko!

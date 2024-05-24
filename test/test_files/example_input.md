@@ -606,6 +606,7 @@ wkms
 W
 </DeepDive>
 
+$$\int_{a}^{b} \frac{1}{2} \left( \sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{n^2} \right) e^{i \pi} \cdot \left( \begin{matrix} \alpha & \beta \\ \gamma & \delta \end{matrix} \right) \, dx = \sqrt{\frac{\pi}{2}} \cdot \left( \frac{\Gamma(\frac{1}{4})}{\Gamma(\frac{3}{4})} \right)$$
 
 ---
 __Advertisement :)__
