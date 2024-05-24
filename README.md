@@ -32,15 +32,21 @@ pip install clang-format
 ```
 
 ### Running linters:
+```
 npx eslint --stdin --stdin-filename=foo.md
 chktex
-clang-format --dry-run --Werror --assume-filename=.c
-clang-format --dry-run --Werror --assume-filename=.cpp
+[no stdin!] clang-tidy --quiet filePath.cpp --
+[no stdin!] clang-tidy --quiet filePath.c --
 sqlfluff lint - --dialect ansi
 flake8 -
-
+```
 
 ### Running formatters:
-prettier --stdin-filepath foo.xxx
+```
+prettier --stdin-filepath foo.md
+prettier --stdin-filepath foo.tex
+prettier --stdin-filepath foo.sql
 black -
-clang-format --assume-filename=<string> 
+clang-format --assume-filename=foo.c
+clang-format --assume-filename=foo.cpp
+``` 
