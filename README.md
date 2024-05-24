@@ -12,7 +12,7 @@
 npm install --save-dev eslint@8.57.0
 npm install eslint-plugin-markdownlint --save-dev
 npm install eslint @babel/core @babel/eslint-parser --save-dev
-pip install cpplint
+pip install clang-tidy
 pip install sqlfluff
 pip install flake8
 ```
@@ -30,14 +30,6 @@ npm install --save-dev prettier-plugin-sql
 pip install black
 pip install clang-format
 ```
-
-npm install eslint@8.57.0
-npm install eslint-plugin-markdownlint
-npm install eslint @babel/core @babel/eslint-parser
-npm install --save-exact prettier
-npm install prettier-plugin-latex
-npm install prettier-plugin-sql
-
 
 ### Running linters:
 npx eslint --stdin --stdin-filename=foo.md
