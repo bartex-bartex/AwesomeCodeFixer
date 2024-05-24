@@ -72,7 +72,7 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
-        foreach(string line in linterOutput.Split('\n'))
+        foreach(string line in linterOutput.Trim().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
         {
             string[] chunks =  line.Split(' ', 3);
 
@@ -94,14 +94,30 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
+        // Setup for Windows
+        foreach (string line in linterOutput
+                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                .Where(x => char.IsUpper(x[0]) && x.Length > 1 && x[1] == ':'))
+        {
+            string[] chunks = line.Split(':', 5);
+
+            int.TryParse(chunks[2], out int rowInt);
+            int.TryParse(chunks[3], out int colInt);
+
+            output.Add(new ErrorModel
+            {
+                Row = rowInt,
+                Column = colInt,
+                Message = chunks[4].Trim()
+            });
+        }
+
         return output;
     }
 
     private static List<ErrorModel> DeserializeCIssues(string linterOutput)
     {
-        List<ErrorModel> output = new();
-
-        return output;
+        return DeserializeCppIssues(linterOutput);
     }
 
     private static List<ErrorModel> DeserializePythonIssues(string linterOutput)

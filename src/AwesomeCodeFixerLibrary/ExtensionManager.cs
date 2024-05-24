@@ -46,8 +46,9 @@ namespace AwesomeCodeFixerLibrary
 
                     next.AddRange(component.Children);
                 }
-
-                current = next;
+                
+                current.Clear();
+                current.AddRange(next);
                 next.Clear();
             }
 
@@ -56,13 +57,15 @@ namespace AwesomeCodeFixerLibrary
             return output;
         }
 
-        // TODO - Fix this method - not even working
+        // TODO - Fix this method
         private static void OffsetErrorLocation(ComponentModel component)
         {
             List<TokenDetailDto> tokenDetails = component.Children.Select(x => new TokenDetailDto(x.Token, x.StartPosition, x.EndPosition)).ToList();
             tokenDetails.ForEach(t => t.RelativeStartPosition = GetTokenRelativeStartPosition(component.Content, t.Token));
             tokenDetails = tokenDetails.Where(x => x.RelativeStartPosition.X >= 0).ToList();
             tokenDetails.Sort();
+
+            var codeBlockTypes = Converter.GetCodeBlockComponentTypes();
 
             foreach (var error in component.Errors)
             {
@@ -73,6 +76,9 @@ namespace AwesomeCodeFixerLibrary
                 if (mostPrecedingToken == null)
                 {
                     error.Row += component.StartPosition.X - 1;
+
+                    if (codeBlockTypes.Contains(component.ComponentType)) { error.Row += 1; }
+
                     continue;
                 }
 
@@ -85,33 +91,10 @@ namespace AwesomeCodeFixerLibrary
 
                 // Applicate offset
                 error.Row = a + mostPrecedingToken.EndPosition.X;
+                if (codeBlockTypes.Contains(component.ComponentType)) { error.Row += 1; }
 
                 if (a == 0) { error.Column = b + mostPrecedingToken.EndPosition.Y; }
-
-                // Point componentStartPos = component.StartPosition;
-                // Point errorStartPos = new Point(error.Row, error.Column);
-
-                // int totalTokensHeight = tokenDetails
-                //                             .Where(t => t.StartPosition.X < errorStartPos.X)
-                //                             .Sum(t => t.EndPosition.X - t.StartPosition.X + 1);
-
-                // int finalRow = error.Row + component.StartPosition.X - 1 + totalTokensHeight; 
-                
-                // int totalTokensWidth = 0;
-                // var matchingTokens = tokenDetails
-                //                             .Where(t => t.EndPosition.X == errorStartPos.X);
-
-                // if (matchingTokens.Any())
-                // {
-                //     totalTokensWidth = matchingTokens.Max(t => t.EndPosition.Y);
-                // }            
-                
-                // int finalColumn = error.Column + totalTokensWidth;
-
-                // error.Row = finalRow;
-                // error.Column = finalColumn;
             }
-
         }
 
         private static TokenDetailDto? GetMostPrecedingToken(int errorRow, int errorColumn, List<TokenDetailDto> tokenDetails)
