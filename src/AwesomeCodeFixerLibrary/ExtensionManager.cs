@@ -16,6 +16,7 @@ namespace AwesomeCodeFixerLibrary
     {
         public static List<ErrorModel> LintCode(string content)
         {
+            Stopwatch stopwatch = new Stopwatch();
             List<ErrorModel> output = new();
 
             ComponentModel rootComponent = Decompose(content, true);
@@ -38,7 +39,12 @@ namespace AwesomeCodeFixerLibrary
                     }
 
                     // Lint component
+                    stopwatch.Start();
+
                     string lintOutput = Linter.Lint(componentContent, component.ComponentType);
+
+                    stopwatch.Stop();
+
                     component.Errors = ErrorManager.DeserializeIssues(lintOutput, component.ComponentType);
                     output.AddRange(component.Errors);
 
@@ -54,6 +60,8 @@ namespace AwesomeCodeFixerLibrary
             }
 
             output.Sort();
+
+            Console.WriteLine($"Linting time elapsed: {stopwatch.Elapsed}");
 
             return output;
         }

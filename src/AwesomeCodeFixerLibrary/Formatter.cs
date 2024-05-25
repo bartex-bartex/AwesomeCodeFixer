@@ -55,6 +55,9 @@ public static class Formatter
                 break;
         }
 
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         StringBuilder outputBuilder = new StringBuilder();
 
         using (Process formatter = new Process())
@@ -81,6 +84,9 @@ public static class Formatter
 
             formatter.WaitForExit();
         }
+
+        stopwatch.Stop();
+        Console.WriteLine($"{componentType} | Time elapsed: {stopwatch.Elapsed}");
 
         return outputBuilder.ToString();
     }

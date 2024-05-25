@@ -59,6 +59,9 @@ public static class Linter
                 break;
         }
 
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         // Create temp file
         if (!string.IsNullOrEmpty(codeFilename))
         {
@@ -105,6 +108,9 @@ public static class Linter
         {
             File.Delete(codeFilename);
         }
+
+        stopwatch.Stop();
+        Console.WriteLine($"{componentType} | Time elapsed: {stopwatch.Elapsed}");
 
         return outputBuilder.ToString();
     }
