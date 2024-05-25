@@ -20,29 +20,30 @@ public static class Linter
         switch (componentType)
         {
             case ComponentType.Markdown:
-                filename = @"C:\Program Files\nodejs\npx.cmd";
+                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
                 arguments = $"eslint --stdin --stdin-filename=foo.md";
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
-                filename = $@"chktex -f '%l %c %m {Environment.NewLine}' -q";
+                filename = @"/usr/bin/chktex";
+                arguments = $@"-f%l:%c:%m|n| -q";
                 break;
             case ComponentType.CppCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-tidy.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
                 arguments = $"--quiet temp.cpp --";
                 codeFilename = "temp.cpp";
                 break;
             case ComponentType.CCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-tidy.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
                 arguments = $"--quiet temp.c --";
                 codeFilename = "temp.c";
                 break;
             case ComponentType.PythonCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\flake8.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/flake8";
                 arguments = $"-";
                 break;
             case ComponentType.SqlCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\sqlfluff.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/sqlfluff";
                 arguments = $"lint - --format github-annotation --dialect ansi";
                 break;
             case ComponentType.UnspecifiedCodeBlock:
@@ -58,103 +59,48 @@ public static class Linter
                 break;
         }
 
+        // Create temp file
         if (!string.IsNullOrEmpty(codeFilename))
         {
             File.WriteAllText(codeFilename, content);
         }
 
         StringBuilder outputBuilder = new StringBuilder();
-        StringBuilder errorBuilder = new StringBuilder();
 
+        // Without the shell you do not have access to PATH
         using (Process linter = new Process())
         {
+            linter.StartInfo.FileName = filename;
+            linter.StartInfo.Arguments = arguments;
 
-            if (componentType == ComponentType.InlineLatex 
-                    || componentType == ComponentType.BlockLatex)
-            {
-                linter.StartInfo.FileName = "ubuntu2204";
+            // Process uses its own path, npx uses node, which it can't find, so I put its folder in the process PATH
+            // Strange because printing shows normal Shell PATH
+            linter.StartInfo.RedirectStandardInput = true;
+            linter.StartInfo.RedirectStandardOutput = true;
+            linter.StartInfo.RedirectStandardError = true;
 
-                linter.StartInfo.RedirectStandardInput = true;
-                linter.StartInfo.RedirectStandardOutput = true;
-                linter.StartInfo.RedirectStandardError = true; // For additional summarization
+            // true means "behave as user double-click the file"
+            linter.StartInfo.UseShellExecute = false;
+            linter.StartInfo.CreateNoWindow = true;
 
-                linter.StartInfo.UseShellExecute = false;
-                linter.StartInfo.CreateNoWindow = true;
+            linter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
 
-                linter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
-                linter.ErrorDataReceived += (sender, e) => errorBuilder.AppendLine(e.Data);
+            linter.Start();
 
-                linter.Start();
-                
-                linter.StandardInput.NewLine = "\n";
-                linter.StandardInput.WriteLine($"{filename}");
-                linter.StandardInput.WriteLine(content);
-                linter.StandardInput.Close();
-
-                linter.BeginOutputReadLine();
-                linter.BeginErrorReadLine();
-
-                linter.WaitForExit();
-            }
-            else if (componentType == ComponentType.CppCodeBlock || componentType == ComponentType.CCodeBlock)
-            {
-                linter.StartInfo.FileName = filename;
-                linter.StartInfo.Arguments = arguments;
-
-                linter.StartInfo.RedirectStandardOutput = true;
-                linter.StartInfo.RedirectStandardError = true; // For additional summarization
-
-                linter.StartInfo.UseShellExecute = false;
-                linter.StartInfo.CreateNoWindow = true;
-
-                linter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
-                linter.ErrorDataReceived += (sender, e) => errorBuilder.AppendLine(e.Data);
-
-                linter.Start();
-                
-                //linter.StandardInput.Close();
-
-                // Freezes when output is too big and fills whole buffer
-                //output = linter.StandardOutput.ReadToEnd();
-
-                linter.BeginOutputReadLine();
-                linter.BeginErrorReadLine();
-
-                linter.WaitForExit();
-            }
-            else
-            {
-                linter.StartInfo.FileName = filename;
-                linter.StartInfo.Arguments = arguments;
-
-                linter.StartInfo.RedirectStandardInput = true;
-                linter.StartInfo.RedirectStandardOutput = true;
-                linter.StartInfo.RedirectStandardError = true; // For additional summarization
-
-                linter.StartInfo.UseShellExecute = false;
-                linter.StartInfo.CreateNoWindow = true;
-
-                linter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
-                linter.ErrorDataReceived += (sender, e) => errorBuilder.AppendLine(e.Data);
-
-                linter.Start();
-                
+            // Means read from stdin
+            if (string.IsNullOrEmpty(codeFilename))
+            {                
                 linter.StandardInput.NewLine = Environment.NewLine;
-                //linter.StandardInput.WriteLine(command);
-
                 linter.StandardInput.WriteLine(content);
                 linter.StandardInput.Close();
-
-                // Freezes when output is too big and fills whole buffer
-                //output = linter.StandardOutput.ReadToEnd();
-
-                linter.BeginOutputReadLine();
-                linter.BeginErrorReadLine();
-
-                linter.WaitForExit();
             }
+
+            linter.BeginOutputReadLine();
+
+            linter.WaitForExit();
         }
 
+        // Remove temp file
         if (!string.IsNullOrEmpty(codeFilename))
         {
             File.Delete(codeFilename);

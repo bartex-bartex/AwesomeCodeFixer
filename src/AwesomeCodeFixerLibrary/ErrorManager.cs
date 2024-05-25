@@ -80,9 +80,9 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
-        foreach(string line in linterOutput.Trim().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+        foreach(string line in linterOutput.Trim().Split("|n|", StringSplitOptions.RemoveEmptyEntries))
         {
-            string[] chunks =  line.Split(' ', 3);
+            string[] chunks =  line.Split(':', 3);
 
             int.TryParse(chunks[0], out int rowInt);
             int.TryParse(chunks[1], out int colInt);

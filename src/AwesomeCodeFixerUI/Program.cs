@@ -10,7 +10,7 @@ internal class Program
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
-        string path = @"..\..\test\test_files\example_input.txt";
+        string path = @"../../test/test_files/example_input.txt";
         string content = File.ReadAllText(path);
 
         //string formattedContent = ExtensionManager.FormatCode(content);
