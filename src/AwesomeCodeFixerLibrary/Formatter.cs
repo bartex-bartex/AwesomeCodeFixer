@@ -18,28 +18,28 @@ public static class Formatter
         switch (componentType)
         {
             case ComponentType.Markdown:
-                filename = @"C:\Program Files\nodejs\npx.cmd";
+                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
                 arguments = $"prettier --stdin-filepath foo.md";
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
-                filename = @"C:\Program Files\nodejs\npx.cmd";
+                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
                 arguments = $"prettier --stdin-filepath foo.tex";
                 break;
             case ComponentType.CppCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-format";
                 arguments = $"--assume-filename=foo.cpp";
                 break;
             case ComponentType.CCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\clang-format.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-format";
                 arguments = $"--assume-filename=foo.c";
                 break;
             case ComponentType.PythonCodeBlock:
-                filename = @"C:\Users\Bartek\AppData\Local\Programs\Python\Python312\Scripts\black.exe";
+                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/black";
                 arguments = $"-";
                 break;
             case ComponentType.SqlCodeBlock:
-                filename = @"C:\Program Files\nodejs\npx.cmd";
+                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
                 arguments = $"prettier --stdin-filepath foo.sql";
                 break;
             case ComponentType.UnspecifiedCodeBlock:
@@ -56,7 +56,6 @@ public static class Formatter
         }
 
         StringBuilder outputBuilder = new StringBuilder();
-        StringBuilder errorBuilder = new StringBuilder();
 
         using (Process formatter = new Process())
         {
@@ -65,24 +64,20 @@ public static class Formatter
 
             formatter.StartInfo.RedirectStandardInput = true;
             formatter.StartInfo.RedirectStandardOutput = true;
-            formatter.StartInfo.RedirectStandardError = true; // For additional summarization
+            formatter.StartInfo.RedirectStandardError = true;
 
-            formatter.StartInfo.UseShellExecute = false; // If false => you must specify a full path to .exe
+            formatter.StartInfo.UseShellExecute = false;
             formatter.StartInfo.CreateNoWindow = true;
 
             formatter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
-            formatter.ErrorDataReceived += (sender, e) => errorBuilder.AppendLine(e.Data);
 
             formatter.Start();
             
             formatter.StandardInput.NewLine = Environment.NewLine;
-            //formatter.StandardInput.WriteLine(command);
             formatter.StandardInput.WriteLine(content);
             formatter.StandardInput.Close();
 
-            // Waits until process terminates
             formatter.BeginOutputReadLine();
-            formatter.BeginErrorReadLine();
 
             formatter.WaitForExit();
         }

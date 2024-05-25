@@ -13,13 +13,15 @@ internal class Program
         string path = @"../../test/test_files/example_input.txt";
         string content = File.ReadAllText(path);
 
-        //string formattedContent = ExtensionManager.FormatCode(content);
-        var lintOutput = ExtensionManager.LintCode(content);
+        string formattedContent = ExtensionManager.FormatCode(content);
+        System.Console.WriteLine(formattedContent);
 
-        foreach (var error in lintOutput)
-        {
-            System.Console.WriteLine($"{error.Row}:{error.Column} | {error.Message}");
-        }
+        // var lintOutput = ExtensionManager.LintCode(content);
+
+        // foreach (var error in lintOutput)
+        // {
+        //     System.Console.WriteLine($"{error.Row}:{error.Column} | {error.Message}");
+        // }
 
         stopwatch.Stop();
         Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
