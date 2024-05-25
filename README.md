@@ -4,6 +4,10 @@
 3. Install Ubuntu on WSL
 
 *Note:* Pip install is a global configuration, however you can go with .venv setup.
+*Note:* Add this line to .bashrc 
+```
+export PATH="$PATH:/home/bartex/.nvm/versions/node/v20.13.1/bin/"
+```
 
 ### Install Linters
 1. Install linting tools in root directory
