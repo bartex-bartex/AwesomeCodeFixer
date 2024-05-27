@@ -46,20 +46,22 @@ internal static class ErrorManager
         string exampleMarkdownRule = "markdownlint/md001";
         int ruleLength = exampleMarkdownRule.Length;
 
-        // TODO - some lines might be shorter than ruleLength
-
         // Remove rule from each line
         List<string> lines = linterOutput
-                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(x => Regex.IsMatch(x, @"^\d+:\d+"))
                 .ToList();
 
-        // Skip frist 1 and last 5 rows
-        for (int i = 1; i < lines.Count - 5; i ++)
+        foreach (var line in lines)
         {
-            string[] chunks = lines[i].Split(new string[] {"  error  ", "  warning  "}, StringSplitOptions.RemoveEmptyEntries);
-            string row = chunks[0].Split(':')[0].Trim();
-            string col = chunks[0].Split(':')[1].Trim();
+            string[] chunks = line.Split(new string[] {"  error  ", "  warning  "},
+                 StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            
+            string[] position = chunks[0].Split(':');
+            string row = position[0];
+            string col = position[1];
 
+            // remove markdown rule from message
             string message = chunks[1].Substring(0, chunks[1].Length - ruleLength).Trim();
 
             int.TryParse(row, out int rowInt);
@@ -69,7 +71,8 @@ internal static class ErrorManager
             {
                 Row = rowInt,
                 Column = colInt,
-                Message = message
+                Message = message,
+                Severity = "warning"
             });
         }
 
@@ -80,9 +83,10 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
-        foreach(string line in linterOutput.Trim().Split("|n|", StringSplitOptions.RemoveEmptyEntries))
+        foreach(string line in linterOutput.Trim().Split(
+            "|n|", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            string[] chunks =  line.Split(':', 3);
+            string[] chunks =  line.Split(':', 4);
 
             int.TryParse(chunks[0], out int rowInt);
             int.TryParse(chunks[1], out int colInt);
@@ -91,7 +95,8 @@ internal static class ErrorManager
             {
                 Row = rowInt,
                 Column = colInt,
-                Message = chunks[2]
+                Message = chunks[2],
+                Severity = chunks[3]
             });
         }
 
@@ -102,21 +107,25 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
-        // Setup for Windows
-        foreach (string line in linterOutput
+        List<string> lines = linterOutput
                 .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => char.IsUpper(x[0]) && x.Length > 1 && x[1] == ':'))
+                .Where(x => x[0] == '/')
+                .ToList();
+
+        // Setup for Linux
+        foreach (string line in lines)
         {
             string[] chunks = line.Split(':', 5);
 
-            int.TryParse(chunks[2], out int rowInt);
-            int.TryParse(chunks[3], out int colInt);
+            int.TryParse(chunks[1], out int rowInt);
+            int.TryParse(chunks[2], out int colInt);
 
             output.Add(new ErrorModel
             {
                 Row = rowInt,
                 Column = colInt,
-                Message = chunks[4].Trim()
+                Message = chunks[4].Trim(),
+                Severity = chunks[3].Trim()
             });
         }
 
@@ -139,11 +148,22 @@ internal static class ErrorManager
             int.TryParse(chunks[1], out int rowInt);
             int.TryParse(chunks[2], out int colInt);
 
+            string severity;
+            if (chunks[3].TrimStart().StartsWith('E'))
+            {
+                severity = "error";
+            }
+            else
+            {
+                severity = "warning";
+            }
+
             output.Add(new ErrorModel
             {
                 Row = rowInt,
                 Column = colInt,
-                Message = chunks[3]
+                Message = chunks[3].Trim(),
+                Severity = severity
             });
         }
 
@@ -152,7 +172,7 @@ internal static class ErrorManager
 
     private static List<ErrorModel> DeserializeSqlIssues(string linterOutput)
     {
-        List<ErrorModel> output = new();
+        List<ErrorModel> output;
 
         output = JsonConvert.DeserializeObject<List<ErrorModel>>(linterOutput);
 

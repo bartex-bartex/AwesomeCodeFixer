@@ -20,7 +20,7 @@ internal class Program
 
         foreach (var error in lintOutput)
         {
-            System.Console.WriteLine($"{error.Row}:{error.Column} | {error.Message}");
+            System.Console.WriteLine($"{error.Row}:{error.Column} | {error.Severity} | {error.Message}");
         }
 
         stopwatch.Stop();

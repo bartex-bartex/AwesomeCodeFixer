@@ -14,6 +14,9 @@ public class ErrorModel : IComparable<ErrorModel>
     [JsonProperty("message")]
     public string Message { get; set; } = string.Empty;
 
+    [JsonProperty("annotation_level")]
+    public string Severity { get; set; } = string.Empty;
+
     public int CompareTo(ErrorModel? other)
     {
         if (other == null) return 1;

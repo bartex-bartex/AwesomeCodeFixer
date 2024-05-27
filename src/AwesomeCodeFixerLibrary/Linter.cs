@@ -26,7 +26,7 @@ public static class Linter
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
                 filename = @"/usr/bin/chktex";
-                arguments = $@"-f%l:%c:%m|n| -q";
+                arguments = $@"-f%l:%c:%k:%m|n| -q";
                 break;
             case ComponentType.CppCodeBlock:
                 filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
