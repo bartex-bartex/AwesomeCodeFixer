@@ -11,6 +11,8 @@ export PATH="$PATH:/home/bartex/.nvm/versions/node/v20.13.1/bin/"
 ## Installing Linters and Formatters
 *Note:* Below operations perform in repository root directory with activated venv.
 
+*Important:* Remember to alter paths to tools in Formatter.cs and Linter.cs. 
+
 ### Install Linters
    
 ```
