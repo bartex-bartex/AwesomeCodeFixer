@@ -232,7 +232,10 @@ namespace AwesomeCodeFixerLibrary
 
                         if (appendComponentPosition)
                         {
-                            child.StartPosition = GetComponentStartPosition(parentOriginalContent, normalizedMatch, current.StartPosition);
+                            // For scenario with multiple EXACT components under parent 
+                            int index = current.Children.Count(x => x.Content == normalizedMatch);
+
+                            child.StartPosition = GetComponentStartPosition(parentOriginalContent, normalizedMatch, current.StartPosition, index);
                             child.EndPosition = GetComponentEndPositon(normalizedMatch, child.StartPosition);
                         }
 
@@ -272,11 +275,17 @@ namespace AwesomeCodeFixerLibrary
         }
 
 
-        // TODO - match also 2 and 3 and ... the same component
-        // TODO - optimize (do not split)
-        private static Point GetComponentStartPosition(string parentOriginalContent, string match, Point parentPosition)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parentOriginalContent"></param>
+        /// <param name="match"></param>
+        /// <param name="parentPosition"></param>
+        /// <param name="index">When multiple exact components exists within parent component, identify which to operate on</param>
+        /// <returns></returns>
+        private static Point GetComponentStartPosition(string parentOriginalContent, string match, Point parentPosition, int index)
         {
-            int pos = parentOriginalContent.IndexOf(match);
+            int pos = Regex.Matches(parentOriginalContent, Regex.Escape(match))[index].Index;
             List<string> contentBeforeComponent = parentOriginalContent.Substring(0, pos).Split(Environment.NewLine).ToList();
 
             int row = contentBeforeComponent.Count + parentPosition.X - 1;
@@ -285,8 +294,6 @@ namespace AwesomeCodeFixerLibrary
             return new Point(row, column);
         }
 
-        // TODO - match also 2 and 3 and ... the same component
-        // TODO - optimize (do not split)
         private static Point GetComponentEndPositon(string content, Point startPosition)
         {
             List<string> contentLines = content.Split(Environment.NewLine).ToList();
