@@ -17,7 +17,7 @@ export PATH="$PATH:/home/bartex/.nvm/versions/node/v20.13.1/bin/"
    
 ```
 npm install --save-dev eslint@8.57.0
-npm install eslint-plugin-markdownlint --save-dev
+npm install markdownlint-cli --save-dev
 npm install eslint @babel/core @babel/eslint-parser --save-dev
 pip install cpplint
 pip install sqlfluff
