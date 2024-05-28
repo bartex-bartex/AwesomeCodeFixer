@@ -43,35 +43,28 @@ internal static class ErrorManager
     {
         List<ErrorModel> output = new();
 
-        string exampleMarkdownRule = "markdownlint/md001";
-        int ruleLength = exampleMarkdownRule.Length;
-
-        // Remove rule from each line
-        List<string> lines = linterOutput
-                .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Where(x => Regex.IsMatch(x, @"^\d+:\d+"))
-                .ToList();
+        List<string> lines = linterOutput.Trim()
+            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            .ToList();
 
         foreach (var line in lines)
         {
-            string[] chunks = line.Split(new string[] {"  error  ", "  warning  "},
-                 StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            string[] chunks = line.Split('/', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             
-            string[] position = chunks[0].Split(':');
-            string row = position[0];
-            string col = position[1];
-
-            // remove markdown rule from message
-            string message = chunks[1].Substring(0, chunks[1].Length - ruleLength).Trim();
+            string[] position = chunks[0].Split(new string[] {":", " "}, StringSplitOptions.None);
+            string row = position[1];
+            string col = position[2];
 
             int.TryParse(row, out int rowInt);
             int.TryParse(col, out int colInt);
+
+            if (colInt == 0) { colInt = 1; }
 
             output.Add(new ErrorModel
             {
                 Row = rowInt,
                 Column = colInt,
-                Message = message,
+                Message = chunks[1],
                 Severity = "warning"
             });
         }

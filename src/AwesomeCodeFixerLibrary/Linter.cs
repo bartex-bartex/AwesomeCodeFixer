@@ -21,7 +21,8 @@ public static class Linter
         {
             case ComponentType.Markdown:
                 filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
-                arguments = $"eslint --stdin --stdin-filename=foo.md";
+                arguments = $"markdownlint-cli temp.md";
+                codeFilename = "temp.md";
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
@@ -48,7 +49,6 @@ public static class Linter
                 break;
             case ComponentType.UnspecifiedCodeBlock:
                 return "";
-            // TODO - Try HTML linter
             case ComponentType.YouTube:
             case ComponentType.Info:
             case ComponentType.Note:
@@ -69,6 +69,7 @@ public static class Linter
         }
 
         StringBuilder outputBuilder = new StringBuilder();
+        StringBuilder errorBuilder = new StringBuilder();
 
         // Without the shell you do not have access to PATH
         using (Process linter = new Process())
@@ -86,6 +87,7 @@ public static class Linter
             linter.StartInfo.UseShellExecute = false;
             linter.StartInfo.CreateNoWindow = true;
 
+            linter.ErrorDataReceived += (sender, e) => errorBuilder.AppendLine(e.Data);
             linter.OutputDataReceived += (sender, e) => outputBuilder.AppendLine(e.Data);
 
             linter.Start();
@@ -99,6 +101,7 @@ public static class Linter
             }
 
             linter.BeginOutputReadLine();
+            linter.BeginErrorReadLine();
 
             linter.WaitForExit();
         }
@@ -111,6 +114,11 @@ public static class Linter
 
         stopwatch.Stop();
         Console.WriteLine($"{componentType} | Time elapsed: {stopwatch.Elapsed}");
+
+        if (componentType == ComponentType.Markdown)
+        {
+            return errorBuilder.ToString();
+        }
 
         return outputBuilder.ToString();
     }

@@ -44,7 +44,6 @@ public static class Formatter
                 break;
             case ComponentType.UnspecifiedCodeBlock:
                 return content;
-            // TODO - try HTML formatter
             case ComponentType.YouTube:
             case ComponentType.Info:
             case ComponentType.Note:
