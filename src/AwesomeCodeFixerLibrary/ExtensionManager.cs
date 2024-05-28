@@ -145,7 +145,6 @@ namespace AwesomeCodeFixerLibrary
                     }
 
                     // Format component
-                    // TODO - output comes without polish characters!
                     string formatOutput = Formatter.Format(componentContent, component.ComponentType);
 
                     // Replace content with formatted content
@@ -272,6 +271,9 @@ namespace AwesomeCodeFixerLibrary
             return latex;
         }
 
+
+        // TODO - match also 2 and 3 and ... the same component
+        // TODO - optimize (do not split)
         private static Point GetComponentStartPosition(string parentOriginalContent, string match, Point parentPosition)
         {
             int pos = parentOriginalContent.IndexOf(match);
@@ -283,6 +285,7 @@ namespace AwesomeCodeFixerLibrary
             return new Point(row, column);
         }
 
+        // TODO - match also 2 and 3 and ... the same component
         // TODO - optimize (do not split)
         private static Point GetComponentEndPositon(string content, Point startPosition)
         {

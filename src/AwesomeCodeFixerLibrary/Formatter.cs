@@ -27,15 +27,15 @@ public static class Formatter
                 arguments = $"prettier --stdin-filepath foo.tex";
                 break;
             case ComponentType.CppCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-format";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-format";
                 arguments = $"--assume-filename=foo.cpp";
                 break;
             case ComponentType.CCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-format";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-format";
                 arguments = $"--assume-filename=foo.c";
                 break;
             case ComponentType.PythonCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/black";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/black";
                 arguments = $"-";
                 break;
             case ComponentType.SqlCodeBlock:

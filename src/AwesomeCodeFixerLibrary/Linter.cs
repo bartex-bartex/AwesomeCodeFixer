@@ -29,21 +29,21 @@ public static class Linter
                 arguments = $@"-f%l:%c:%k:%m|n| -q";
                 break;
             case ComponentType.CppCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
                 arguments = $"--quiet temp.cpp --";
                 codeFilename = "temp.cpp";
                 break;
             case ComponentType.CCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
                 arguments = $"--quiet temp.c --";
                 codeFilename = "temp.c";
                 break;
             case ComponentType.PythonCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/flake8";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/flake8";
                 arguments = $"-";
                 break;
             case ComponentType.SqlCodeBlock:
-                filename = @"/home/bartex/GithubProjects/AwesomeCodeFixer/.venv/bin/sqlfluff";
+                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/sqlfluff";
                 arguments = $"lint - --format github-annotation --dialect ansi";
                 break;
             case ComponentType.UnspecifiedCodeBlock:

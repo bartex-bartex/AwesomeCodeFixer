@@ -13,6 +13,8 @@
     "@babel/eslint-parser": "^7.24.6",
     "eslint": "^8.57.0",
     "eslint-plugin-markdownlint": "^0.5.0",
+    "markdownlint-cli": "^0.41.0",
+    "markdownlint-cli2": "^0.13.0",
     "prettier": "3.2.5",
     "prettier-plugin-latex": "^2.0.1",
     "prettier-plugin-sql": "^0.18.0"
