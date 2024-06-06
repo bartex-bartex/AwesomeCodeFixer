@@ -1,8 +1,32 @@
-## Instalation
+# AwesomeCodeFixer
+
+Celem projektu jest stworzenie narzędzia do formatowania i lintowania pliku łączącego składnie:
+- markdown'a
+- inline/block latex'a
+- języków programowania (aktualnie wspierane - C, C++, Python, Sql)
+
+Narzędzie posiada 2 endpointy:
+- format - przyjmuje treść artykułu, a na wyjście przesyła sformatowany tekst
+- lint - przyjmuje treść artykułu, a na wyjście przesyła listę błędów/warning'ów
+
+## Wykorzystane narzędzia
+Język implementacji: C#.
+
+- markdownlint: https://github.com/DavidAnson/markdownlint
+- chktex: https://www.nongnu.org/chktex/
+- eslint: https://eslint.org/
+- prettier: https://prettier.io/
+- clang-format: https://clang.llvm.org/docs/ClangFormat.html
+- clang-tidy: https://clang.llvm.org/extra/clang-tidy/
+- black: https://github.com/psf/black
+- flake8: https://github.com/PyCQA/flake8
+- sqlfluff: https://github.com/sqlfluff/sqlfluff
+
+## Installation
 1. Clone project
 2. Install latest Node.js
 3. Install Linux distro (developed with Ubuntu) on WSL
-4. Create venv for python in the root of repository
+4. Create venv for python in the root of repository and activate it
 
 *Note:* Add path to your current node version bin folder to .bashrc, e.g. 
 ```
@@ -33,7 +57,7 @@ npm install --save-dev prettier-plugin-sql
 pip install black
 pip install clang-format
 ```
-## Using tools reference 
+## Tools usage reference 
 
 ### Running linters:
 ```
@@ -51,3 +75,8 @@ prettier --stdin-filepath foo.xxx
 black -
 clang-format --assume-filename=<string> 
 ```
+
+## Contribution
+- Bartosz Warchoł
+- Radosław Myśliwiec
+- Gabriela Żmuda
