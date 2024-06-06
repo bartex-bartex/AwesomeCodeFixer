@@ -1,9 +1,9 @@
 # AwesomeCodeFixer
 
-Celem projektu jest stworzenie narzędzia do formatowania i lintowania pliku łączącego składnie:
-- markdown'a
-- inline/block latex'a
-- języków programowania (aktualnie wspierane - C, C++, Python, Sql)
+Celem projektu jest stworzenie narzędzia do formatowania i lintowania pliku o własnym formacie, w którego skład wchodzi:
+- markdown
+- inline/block latex
+- code block (aktualnie wspierane - C, C++, Python, Sql)
 
 Narzędzie posiada 2 endpointy:
 - format - przyjmuje treść artykułu, a na wyjście przesyła sformatowany tekst
