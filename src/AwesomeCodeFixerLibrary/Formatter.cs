@@ -18,28 +18,28 @@ public static class Formatter
         switch (componentType)
         {
             case ComponentType.Markdown:
-                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
+                filename = @"npx";
                 arguments = $"prettier --stdin-filepath foo.md";
                 break;
             case ComponentType.InlineLatex:
             case ComponentType.BlockLatex:
-                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
+                filename = @"npx";
                 arguments = $"prettier --stdin-filepath foo.tex";
                 break;
             case ComponentType.CppCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-format";
+                filename = @"clang-format";
                 arguments = $"--assume-filename=foo.cpp";
                 break;
             case ComponentType.CCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-format";
+                filename = @"clang-format";
                 arguments = $"--assume-filename=foo.c";
                 break;
             case ComponentType.PythonCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/black";
+                filename = @"black";
                 arguments = $"-";
                 break;
             case ComponentType.SqlCodeBlock:
-                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
+                filename = @"npx";
                 arguments = $"prettier --stdin-filepath foo.sql";
                 break;
             case ComponentType.UnspecifiedCodeBlock:

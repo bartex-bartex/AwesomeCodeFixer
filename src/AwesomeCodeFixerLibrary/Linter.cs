@@ -20,7 +20,7 @@ public static class Linter
         switch (componentType)
         {
             case ComponentType.Markdown:
-                filename = @"/home/bartex/.nvm/versions/node/v20.13.1/bin/npx";
+                filename = @"npx";
                 arguments = $"markdownlint-cli temp.md";
                 codeFilename = "temp.md";
                 break;
@@ -30,21 +30,21 @@ public static class Linter
                 arguments = $@"-f%l:%c:%k:%m|n| -q";
                 break;
             case ComponentType.CppCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
+                filename = @"clang-tidy";
                 arguments = $"--quiet temp.cpp --";
                 codeFilename = "temp.cpp";
                 break;
             case ComponentType.CCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/clang-tidy";
+                filename = @"clang-tidy";
                 arguments = $"--quiet temp.c --";
                 codeFilename = "temp.c";
                 break;
             case ComponentType.PythonCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/flake8";
+                filename = @"flake8";
                 arguments = $"-";
                 break;
             case ComponentType.SqlCodeBlock:
-                filename = @"/home/bartex/Documents/MyProjects/AwesomeCodeFixer/.venv/bin/sqlfluff";
+                filename = @"sqlfluff";
                 arguments = $"lint - --format github-annotation --dialect ansi";
                 break;
             case ComponentType.UnspecifiedCodeBlock:
